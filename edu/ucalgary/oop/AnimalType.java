@@ -21,4 +21,21 @@ public enum AnimalType {
         this.CLEAN_DURATION = cleanDuration;
 
     }
+
+    public int getFeedStartTime() {
+        return FEED_START_TIME;
+    }
+
+    public int getPrepDuration() {
+        return PREP_DURATION;
+    }
+
+    public int getFeedDuration() {
+        return FEED_DURATION;
+    }
+
+    public int getCleanDuration() {
+        return CLEAN_DURATION;
+    }
+
 }
