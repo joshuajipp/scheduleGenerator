@@ -14,56 +14,32 @@ public class Schedule {
         return animalsArray;
     }
 
-    // public void createConnection() {
-    // try {
-    // dbConnect = DriverManager.getConnection("jdbc:mysql://localhost/EWR",
-    // username, password);
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // public ArrayList<Animal> selectAnimals() {
-    // try {
-    // Statement myStmt = dbConnect.createStatement();
-    // results = myStmt.executeQuery("SELECT * FROM ANIMALS");
-    // while (results.next()) {
-    // int id = results.getInt("AnimalID");
-    // String nickname = results.getString("AnimalNickname");
-    // String species = results.getString("AnimalSpecies");
-
-    // Animal animal = new Animal(id, nickname, species, username, password);
-    // animalArray.add(animal);
-    // }
-    // myStmt.close();
-    // } catch (SQLException ex) {
-    // ex.printStackTrace();
-    // }
-    // return animalArray;
-    // }
-
-    // public ArrayList<Animal> getTreatmentArrayList() {
-    // return animalArray;
-    // }
-
-    // public void close() {
-    // try {
-    // results.close();
-    // dbConnect.close();
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
     public static void main(String args[]) {
-        if (args.length == 0) {
-            throw new IllegalArgumentException("No args");
-        }
-        System.out.println(String.format("%s %s", args[0], args[1]));
+        String url = "jdbc:mysql://localhost:3306/EWR";
+        String user = args[0];
+        String password = args[1];
+        Connection dbConnection;
+        Statement dbStatement;
+        ResultSet dbResults;
+        String dbQuery;
+        ArrayList<Animal> animals = new ArrayList<Animal>();
 
-        final String URL = "jdbc:mysql://localhost:3306/EWR";
-        final String USER = args[0];
-        final String PASSWORD = args[1];
+        try {
+            dbConnection = DriverManager.getConnection(
+                    "jdbc:mysql://localhost/EWR", user, password);
+            dbStatement = dbConnection.createStatement();
+            dbQuery = "SELECT * FROM ANIMALS";
+            dbResults = dbStatement.executeQuery(dbQuery);
+            while (dbResults.next()) {
+                Animal animal = new Animal(dbResults.getInt("AnimalID"),
+                        dbResults.getString("AnimalNickname"), dbResults.getString("AnimalSpecies"));
+                animals.add(animal);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
