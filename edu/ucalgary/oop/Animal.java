@@ -13,33 +13,35 @@ public class Animal {
         this.ID = id;
         this.NICKNAME = name;
         this.SPECIES = AnimalType.valueOf(species.toUpperCase());
-        String url = "jdbc:mysql://localhost:3306/EWR";
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-            String query = String.format("SELECT * FROM TREATMENTS WHERE AnimalID = %d", this.ID);
-            resultSet = statement.executeQuery(query);
 
-            while (resultSet.next()) {
-                Treatments treatment = new Treatments(resultSet.getInt("TreatmentID"), id,
-                        resultSet.getInt("TaskID"), resultSet.getInt("StartHour"), user, password);
+        // String url = "jdbc:mysql://localhost:3306/EWR";
+        // Connection connection = null;
+        // Statement statement = null;
+        // ResultSet resultSet = null;
+        // try {
+        // connection = DriverManager.getConnection(url, user, password);
+        // statement = connection.createStatement();
+        // String query = String.format("SELECT * FROM TREATMENTS WHERE AnimalID = %d",
+        // this.ID);
+        // resultSet = statement.executeQuery(query);
 
-                animalTreatments.add(treatment);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                resultSet.close();
-                statement.close();
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        // while (resultSet.next()) {
+        // Treatments treatment = new Treatments(resultSet.getInt("TreatmentID"), id,
+        // resultSet.getInt("TaskID"), resultSet.getInt("StartHour"), user, password);
+
+        // animalTreatments.add(treatment);
+        // }
+        // } catch (SQLException e) {
+        // e.printStackTrace();
+        // } finally {
+        // try {
+        // resultSet.close();
+        // statement.close();
+        // connection.close();
+        // } catch (SQLException e) {
+        // e.printStackTrace();
+        // }
+        // }
     }
 
     public int getID() {
