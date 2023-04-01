@@ -24,11 +24,10 @@ public class Animal {
             resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                Treatments treatment = new Treatments(resultSet.getInt("TreatmentID"),
+                Treatments treatment = new Treatments(resultSet.getInt("TreatmentID"), id,
                         resultSet.getInt("TaskID"), resultSet.getInt("StartHour"), user, password);
 
                 animalTreatments.add(treatment);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
