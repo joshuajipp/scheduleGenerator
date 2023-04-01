@@ -5,12 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class HomePageGUI extends JFrame implements ActionListener, MouseListener { 
-    private String username;
 
-    private JLabel loginPrompt;
-    private JTextField userInput;
-    private JTextField passInput;
-    
     public HomePageGUI(){
         super("Wildlife Rescue");
         setupGUI();
@@ -18,32 +13,35 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void setupGUI(){
-        loginPrompt = new JLabel("Enter your login information:");
+        JButton ScheduleButton  = new JButton("Schedule");
+        ScheduleButton.addActionListener(this);
+
+        JButton AnimalButton = new JButton("Animals");
+        AnimalButton.addActionListener(this);
+
+        JButton TreatmentsButton =  new JButton("Treatments");
+        TreatmentsButton.addActionListener(this);
+
+        JButton TasksButton = new JButton("Tasks");
+        TasksButton.addActionListener(this);
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout());
 
-        headerPanel.add(loginPrompt);
+        headerPanel.add(ScheduleButton);
+        headerPanel.add(AnimalButton);
+        headerPanel.add(TreatmentsButton);
+        headerPanel.add(TasksButton);
 
         this.add(headerPanel, BorderLayout.NORTH);
-       
+
     }
-    
-    public void actionPerformed(ActionEvent event){
-        username = userInput.getText();
-   
-       
-            
-            
-    }
-            
+    public void actionPerformed(ActionEvent event){}
     
     public void mouseClicked(MouseEvent event){
-        if(event.getSource().equals(userInput))
-            userInput.setText("");
-        if(event.getSource().equals(passInput))
-            passInput.setText("");
+      
     }
+
     public void mouseEntered(MouseEvent event){}
     public void mouseExited(MouseEvent event){}
     public void mousePressed(MouseEvent event){}
