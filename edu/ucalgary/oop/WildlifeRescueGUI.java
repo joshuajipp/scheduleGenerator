@@ -50,7 +50,9 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public void actionPerformed(ActionEvent event){
         username = userInput.getText();
         password = passInput.getText();
-        validateLogin();
+        if(validateLogin()){
+            new Schedule(username, password);
+        }
             
     }
     public void mouseClicked(MouseEvent event){
@@ -64,12 +66,16 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public void mousePressed(MouseEvent event){}
     public void mouseReleased(MouseEvent event){}
     
-    private void validateLogin(){
-        try{
-            DriverManager.getConnection("jdbc:mysql://localhost/EWR", username, password);
-        } catch(SQLException e) {
-            JOptionPane.showMessageDialog(null,"Incorrect login information");
-        }
+    private boolean validateLogin(){
+        boolean validateLogin = true;
+        // try{
+        //     DriverManager.getConnection("jdbc:Mysql://localhost:3306/EWR", "root", "Mx.ze0218");
+        // } catch(SQLException e) {
+        //     JOptionPane.showMessageDialog(null,"Incorrect login information");
+        //     validateLogin = false;
+        // }
+        // System.out.println(validateLogin);
+        return validateLogin;
     }
 
     public static void main(String[] args) {
