@@ -17,22 +17,29 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public WildlifeRescueGUI(){
         super("Wildlife Rescue");
         setupGUI();
-        setSize(500,500);
+        setSize(800,800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void setupGUI(){
         loginPrompt = new JLabel("Enter your login information:");
+        loginPrompt.setFont(new Font("Calibri", Font.BOLD,30));
+        loginPrompt.setForeground(Color.BLUE);
+        loginPrompt.setBounds(60,10,300,30);
+        
 
         userInput = new JTextField("Username");
-        userInput.setBounds(100,20,165,25);
+        userInput.setFont(new Font("Calibri", Font.PLAIN,30));
+        userInput.setBounds(100,60,130,30);
 
         passInput = new JTextField("Password");
-        passInput.setBounds(100,20,165,25);
+        passInput.setFont(new Font("Calibri", Font.PLAIN,30));
+        passInput.setBounds(100,100,120,30);
         
         userInput.addMouseListener(this);
         passInput.addMouseListener(this);
 
         JButton loginButton = new JButton("Login");
+        loginButton.setFont(new Font("Calibri", Font.PLAIN,30));
         loginButton.addActionListener(this);
 
         JPanel headerPanel = new JPanel();
