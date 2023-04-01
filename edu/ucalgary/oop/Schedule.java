@@ -6,8 +6,19 @@ import java.util.ArrayList;
 public class Schedule {
     private ArrayList<Animal> animalsArray;
 
-    public Schedule(ArrayList<Animal> animalsArray) {
-        this.animalsArray = animalsArray;
+    public Schedule(ArrayList<Animal> animals) {
+        this.animalsArray = animals;
+    }
+
+    public Schedule(ArrayList<Animal> animals, ArrayList<Treatments> treatments) {
+        this.animalsArray = animals;
+        addTreatments(treatments);
+    }
+
+    public void addTreatments(ArrayList<Treatments> treatments) {
+        for (Animal animal : getAnimalsArray()) {
+            animal.addTreatments(treatments);
+        }
     }
 
     public ArrayList<Animal> getAnimalsArray() {
