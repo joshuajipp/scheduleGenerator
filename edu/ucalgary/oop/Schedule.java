@@ -23,10 +23,11 @@ public class Schedule {
         ResultSet dbResults;
         String dbQuery;
         ArrayList<Animal> animals = new ArrayList<Animal>();
+        ArrayList<Treatments> treatments = new ArrayList<Treatments>();
 
         try {
             dbConnection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/EWR", user, password);
+                    url, user, password);
             dbStatement = dbConnection.createStatement();
             dbQuery = "SELECT * FROM ANIMALS";
             dbResults = dbStatement.executeQuery(dbQuery);
@@ -35,11 +36,24 @@ public class Schedule {
                         dbResults.getString("AnimalNickname"), dbResults.getString("AnimalSpecies"));
                 animals.add(animal);
             }
+            dbStatement.close();
+
+            dbStatement = dbConnection.createStatement();
+            dbQuery = "SELECT * FROM ewr.treatments as treats"
+                    .concat("JOIN ewr.tasks tasks ON treats.TaskID = tasks.TaskID");
+            dbResults = dbStatement.executeQuery(dbQuery);
+            while (dbResults.next()) {
+                Treatments treatment = new Treatments(dbResults.getInt("TreatmentID"),
+                        dbResults.getInt("AnimalID"), dbResults.getInt("StartHour"),
+                        dbResults.getString("Description"), dbResults.getInt("Duration"),
+                        dbResults.getInt("MaxWindow"));
+                treatments.add(treatment);
+            }
+            dbStatement.close();
+            dbConnection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
 }
