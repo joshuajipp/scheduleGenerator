@@ -14,6 +14,14 @@ public class Animal {
         this.SPECIES = AnimalType.valueOf(species.toUpperCase());
     }
 
+    public void addTreatments(ArrayList<Treatments> treatments) {
+        for (Treatments treat : treatments) {
+            if (treat.getAnimalID() == getID()) {
+                animalTreatments.add(treat);
+            }
+        }
+    }
+
     public int getID() {
         return ID;
     }
