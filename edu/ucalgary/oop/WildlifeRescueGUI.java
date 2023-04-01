@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 
+
 public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseListener{
     private String username;
     private String password;
@@ -23,7 +24,11 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         loginPrompt = new JLabel("Enter your login information:");
 
         userInput = new JTextField("Username");
+        userInput.setBounds(100,20,165,25);
+
         passInput = new JTextField("Password");
+        passInput.setBounds(100,20,165,25);
+        
         userInput.addMouseListener(this);
         passInput.addMouseListener(this);
 
@@ -51,7 +56,12 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         username = userInput.getText();
         password = passInput.getText();
         if(validateLogin()){
-            new Schedule(username, password);
+            String[] arguments = {username,password};
+            Schedule.main(arguments);
+            dispose();
+            EventQueue.invokeLater(() -> {
+                new HomePageGUI().setVisible(true);        
+            });    
         }
             
     }
