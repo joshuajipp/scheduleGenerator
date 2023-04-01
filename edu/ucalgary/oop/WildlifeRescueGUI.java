@@ -3,17 +3,16 @@ package edu.ucalgary.oop;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import java.sql.*;
 
 public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseListener{
     private String username;
     private String password;
 
     private JLabel loginPrompt;
-
     private JTextField userInput;
     private JTextField passInput;
-
+  
     public WildlifeRescueGUI(){
         super("Wildlife Rescue");
         setupGUI();
@@ -51,10 +50,8 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public void actionPerformed(ActionEvent event){
         username = userInput.getText();
         password = passInput.getText();
-        if(validateLogin()){
-            //new Schedule(username, password);
-            JOptionPane.showMessageDialog(this, "Successfully signed in as " + username);
-        }
+        validateLogin();
+            
     }
     public void mouseClicked(MouseEvent event){
         if(event.getSource().equals(userInput))
@@ -67,19 +64,14 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public void mousePressed(MouseEvent event){}
     public void mouseReleased(MouseEvent event){}
     
-    private boolean validateLogin(){
-        //String user = "guestuser";
-        //String pass ="ensf";
-        boolean validateLogin = true;
-        // if(username != user && password != pass){
-        //     validateLogin = false;
-        //     JOptionPane.showMessageDialog(null,"Incorrect login information");
-        // }
-        return validateLogin;
+    private void validateLogin(){
+        try{
+            DriverManager.getConnection("jdbc:mysql://localhost/EWR", username, password);
+        } catch(SQLException e) {
+            JOptionPane.showMessageDialog(null,"Incorrect login information");
+        }
     }
 
-
-    
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             new WildlifeRescueGUI().setVisible(true);        
