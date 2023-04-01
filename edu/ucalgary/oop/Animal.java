@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class Animal {
     private final int ID;
     private final String NICKNAME;
-    private final String SPECIES;
+    private final AnimalType SPECIES;
     private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
 
     public Animal(int id, String name, String species, String user, String password) {
         this.ID = id;
         this.NICKNAME = name;
-        this.SPECIES = species;
+        this.SPECIES = AnimalType.valueOf(species.toUpperCase());
         String url = "jdbc:mysql://localhost:3306/EWR";
         Connection connection = null;
         Statement statement = null;
@@ -50,7 +50,7 @@ public class Animal {
         return NICKNAME;
     }
 
-    public String getSpecies() {
+    public AnimalType getSpecies() {
         return SPECIES;
     }
 
