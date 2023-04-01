@@ -1,6 +1,5 @@
 package edu.ucalgary.oop;
 
-import java.sql.*;
 import java.util.ArrayList;
 
 public class Animal {
