@@ -17,16 +17,15 @@ public class Animal {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-
         try {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM TREATMENTS");
+            String query = String.format("SELECT * FROM TREATMENTS WHERE AnimalID = %d", this.ID);
+            resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
                 Treatments treatment = new Treatments(resultSet.getInt("TreatmentID"),
-                        resultSet.getInt("AnimalID"), resultSet.getInt("TaskID"),
-                        resultSet.getInt("StartHour"), user, password);
+                        resultSet.getInt("TaskID"), resultSet.getInt("StartHour"), user, password);
 
                 animalTreatments.add(treatment);
 
@@ -35,15 +34,9 @@ public class Animal {
             e.printStackTrace();
         } finally {
             try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
+                resultSet.close();
+                statement.close();
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
