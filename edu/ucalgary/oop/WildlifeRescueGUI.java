@@ -1,3 +1,9 @@
+/**
+@author 	Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
+@version    	1.2
+@since  	1.0
+*/
 package edu.ucalgary.oop;
 
 import javax.swing.*;
@@ -11,6 +17,8 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     private String password;
 
     private JLabel loginPrompt;
+    private JLabel userPrompt;
+    private JLabel passPrompt;
     private JTextField userInput;
     private JTextField passInput;
   
@@ -26,12 +34,19 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         loginPrompt.setForeground(Color.BLUE);
         loginPrompt.setBounds(60,10,300,30);
         
+        userPrompt = new JLabel ("Username");
+        userPrompt.setFont(new Font("Calibri", Font.PLAIN,20));
+        userPrompt.setBounds(60,10,300,30);
 
-        userInput = new JTextField("Username");
+        userInput = new JTextField(10);
         userInput.setFont(new Font("Calibri", Font.PLAIN,30));
         userInput.setBounds(100,60,130,30);
 
-        passInput = new JTextField("Password");
+        passPrompt = new JLabel ("Username");
+        passPrompt.setFont(new Font("Calibri", Font.PLAIN,20));
+        passPrompt.setBounds(60,10,300,30);
+
+        passInput = new JPasswordField(10);
         passInput.setFont(new Font("Calibri", Font.PLAIN,30));
         passInput.setBounds(100,100,120,30);
         
@@ -50,7 +65,9 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         loginPanel.setLayout(new FlowLayout());
 
         headerPanel.add(loginPrompt);
+        userPanel.add(userPrompt);
         userPanel.add(userInput);
+        userPanel.add(passPrompt);
         userPanel.add(passInput);
         loginPanel.add(loginButton);
 

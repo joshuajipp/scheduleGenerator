@@ -20,6 +20,11 @@ homepage for the wildlife rescue program that will show the schedules for the vo
 public class HomePageGUI extends JFrame implements ActionListener, MouseListener { 
     private LocalDate date = LocalDate.now(); //current date
     private JLabel scheduleHeader; //label for schedule header
+    private JButton ScheduleButton;
+    private JButton AnimalButton;
+    private JButton TreatmentButton;
+    private JButton TasksButton;
+
 
     /*
     HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
@@ -79,7 +84,23 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
         this.add(mainBody, BorderLayout.LINE_START);
 
     }
-    public void actionPerformed(ActionEvent event){}
+    /*
+    
+     */
+    public void actionPerformed(ActionEvent event){
+       if(event.getSource() == ScheduleButton){
+            //get schedule
+       }
+       if(event.getSource() == AnimalButton){
+            //get list of animals
+       }
+       if(event.getSource() == TreatmentButton){
+            //get list of treatment
+       }
+       if(event.getSource() == TasksButton){
+            //get list of tasks
+       }
+    }
     
     public void mouseClicked(MouseEvent event){
       
@@ -92,6 +113,7 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
     /*
     Invokes the GUI. Calls the HomePageGUI() constructor to create and configure the JFrame and this main method sets the visibility
     to true.
+    @param args Optional command-line argument
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
