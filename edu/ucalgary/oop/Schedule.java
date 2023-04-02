@@ -50,7 +50,7 @@ public class Schedule {
             dbStatement.close();
 
             dbStatement = dbConnection.createStatement();
-            dbQuery = "SELECT * FROM ewr.treatments as treats"
+            dbQuery = "SELECT * FROM ewr.treatments as treats "
                     .concat("JOIN ewr.tasks tasks ON treats.TaskID = tasks.TaskID");
             dbResults = dbStatement.executeQuery(dbQuery);
             while (dbResults.next()) {
