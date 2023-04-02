@@ -54,10 +54,9 @@ public class Schedule {
                     .concat("JOIN ewr.tasks tasks ON treats.TaskID = tasks.TaskID");
             dbResults = dbStatement.executeQuery(dbQuery);
             while (dbResults.next()) {
-                Treatments treatment = new Treatments(dbResults.getInt("TreatmentID"),
-                        dbResults.getInt("AnimalID"), dbResults.getInt("StartHour"),
-                        dbResults.getString("Description"), dbResults.getInt("Duration"),
-                        dbResults.getInt("MaxWindow"));
+                Treatments treatment = new Treatments(dbResults.getInt("AnimalID"),
+                        dbResults.getInt("StartHour"), dbResults.getString("Description"),
+                        dbResults.getInt("Duration"), dbResults.getInt("MaxWindow"));
                 treatments.add(treatment);
             }
             dbStatement.close();
