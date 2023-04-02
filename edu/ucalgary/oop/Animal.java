@@ -11,7 +11,12 @@ public class Animal {
     public Animal(int id, String name, String species) {
         this.ID = id;
         this.NICKNAME = name;
-        this.SPECIES = AnimalType.valueOf(species.toUpperCase());
+        if (name.split("\\s+").length > 1) {
+            this.SPECIES = AnimalType.KITS;
+        } else {
+            this.SPECIES = AnimalType.valueOf(species.toUpperCase());
+        }
+
     }
 
     public void addTreatments(ArrayList<Treatments> treatments) {

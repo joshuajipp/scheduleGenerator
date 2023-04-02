@@ -5,7 +5,8 @@ public enum AnimalType {
     FOX(0, 5, 5, 5),
     PORCUPINE(19, 0, 5, 10),
     BEAVER(8, 0, 5, 5),
-    RACCOON(0, 0, 5, 5);
+    RACCOON(0, 0, 5, 5),
+    KITS(0, 0, 0, 30);
 
     private final int FEED_START_TIME;
     private final int PREP_DURATION;
