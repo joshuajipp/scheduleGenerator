@@ -1,20 +1,25 @@
+/**
+@author 	Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
+@version    	1.2
+@since  	1.0
+*/
 package edu.ucalgary.oop;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
 
 public class HomePageGUI extends JFrame implements ActionListener, MouseListener { 
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
     private JLabel scheduleHeader;
 
     public HomePageGUI(){
         super("Wildlife Rescue");
         setupGUI();
-        setSize(800,800);
+        setSize(800,500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void setupGUI(){
@@ -22,7 +27,7 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
         ScheduleButton.setFont(new Font("Calibri",Font.PLAIN,30));
         ScheduleButton.addActionListener(this);
         
-        scheduleHeader = new JLabel("Schedule for " + date);
+        scheduleHeader = new JLabel("Schedule for " + date.plusDays(1));
         scheduleHeader.setFont(new Font("Calibri", Font.BOLD,30));
         scheduleHeader.setForeground(Color.BLUE);
 
