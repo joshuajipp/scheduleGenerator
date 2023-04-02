@@ -77,7 +77,7 @@ public class Schedule {
         ArrayList<Treatments> sched = taskSchedule.getSchedule();
         for (Treatments treat : sched) {
             System.out.println(String.format(
-                    "animalID: %d, startHour: %d, description: %s, duration: %d, maxWindow: %d, setupTime: %d",
+                    "animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d",
                     treat.getAnimalID(), treat.getStartHour(), treat.getDescription(), treat.getDuration(),
                     treat.getMaxWindow(), treat.getSetupTime()));
         }
