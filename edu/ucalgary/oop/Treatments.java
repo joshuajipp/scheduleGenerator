@@ -1,7 +1,6 @@
 package edu.ucalgary.oop;
 
 public class Treatments {
-    private int treatmentID;
     private int animalID;
     private int startHour;
     private String description;
@@ -9,9 +8,9 @@ public class Treatments {
     private int maxWindow;
     private int setupTime;
 
-    public Treatments(int treatmentID, int animalID, int startHour,
+    public Treatments(int animalID, int startHour,
             String description, int duration, int maxWindow) {
-        this.treatmentID = treatmentID;
+
         this.animalID = animalID;
         this.startHour = startHour;
         this.description = description;
@@ -20,19 +19,15 @@ public class Treatments {
         this.setupTime = 0;
     }
 
-    public Treatments(int treatmentID, int animalID, int startHour,
+    public Treatments(int animalID, int startHour,
             String description, int duration, int maxWindow, int setupTime) {
-        this.treatmentID = treatmentID;
+
         this.animalID = animalID;
         this.startHour = startHour;
         this.description = description;
         this.duration = duration;
         this.maxWindow = maxWindow;
         this.setupTime = setupTime;
-    }
-
-    public int getTreatmentID() {
-        return treatmentID;
     }
 
     public int getAnimalID() {
