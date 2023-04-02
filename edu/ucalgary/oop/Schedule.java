@@ -25,6 +25,14 @@ public class Schedule {
         return animalsArray;
     }
 
+    public ArrayList<Treatments> getSchedule() {
+        ArrayList<Treatments> treats = new ArrayList<Treatments>();
+        for (Animal animal : getAnimalsArray()) {
+            treats.addAll(animal.getAnimalTreatments());
+        }
+        return treats;
+    }
+
     public static void main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
         String user = args[0];
@@ -65,5 +73,14 @@ public class Schedule {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Schedule taskSchedule = new Schedule(animals, treatments);
+        ArrayList<Treatments> sched = taskSchedule.getSchedule();
+        for (Treatments treat : sched) {
+            System.out.println(String.format(
+                    "animalID: %d, startHour: %d, description: %s, duration: %d, maxWindow: %d, setupTime: %d",
+                    treat.getAnimalID(), treat.getStartHour(), treat.getDescription(), treat.getDuration(),
+                    treat.getMaxWindow(), treat.getSetupTime()));
+        }
+
     }
 }
