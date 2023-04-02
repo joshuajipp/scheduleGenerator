@@ -17,7 +17,7 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     public WildlifeRescueGUI(){
         super("Wildlife Rescue");
         setupGUI();
-        setSize(800,800);
+        setSize(800,500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public void setupGUI(){
@@ -85,13 +85,12 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
     
     private boolean validateLogin(){
         boolean validateLogin = true;
-        // try{
-        //     DriverManager.getConnection("jdbc:Mysql://localhost:3306/EWR", "root", "Mx.ze0218");
-        // } catch(SQLException e) {
-        //     JOptionPane.showMessageDialog(null,"Incorrect login information");
-        //     validateLogin = false;
-        // }
-        // System.out.println(validateLogin);
+            try{
+                DriverManager.getConnection("jdbc:mysql://localhost:3306/ewr", username, password);
+            } catch(SQLException e) {
+                JOptionPane.showMessageDialog(null,"Incorrect login information");
+                validateLogin = false;
+            }
         return validateLogin;
     }
 
