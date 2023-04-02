@@ -13,8 +13,17 @@ public class Animal {
         this.NICKNAME = name;
         if (name.split("\\s+").length > 1) {
             this.SPECIES = AnimalType.KITS;
+
+            animalTreatments.add(new Treatments(ID, 0, String.format(
+                    "Clean cage for the Kits", name), SPECIES.getFeedDuration(), 24));
         } else {
             this.SPECIES = AnimalType.valueOf(species.toUpperCase());
+
+            animalTreatments.add(new Treatments(ID, SPECIES.getFeedStartTime(),
+                    String.format("Feed %s", name), SPECIES.getCleanDuration(),
+                    3, SPECIES.getPrepDuration()));
+            animalTreatments.add(new Treatments(ID, 0, String.format(
+                    "Clean cage for %s", name), SPECIES.getFeedDuration(), 24));
         }
 
     }
