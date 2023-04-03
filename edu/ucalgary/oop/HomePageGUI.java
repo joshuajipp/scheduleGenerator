@@ -7,10 +7,12 @@
 package edu.ucalgary.oop;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.concurrent.Flow;
 
 /*
@@ -42,23 +44,42 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
         this.add(tabbedPane);
 
         JLabel scheduleLabel = new JLabel("Schedule for: " + date.plusDays(1));
-        
-
-
         JLabel animalLabel = new JLabel ("This is the animal tab");
-     
+    
 
-        JLabel treatmentLabel = new JLabel("This is the treatment tab");
-
+        JPanel treatmentPanel = new JPanel(new BorderLayout());
+        JTable table  = treatmentTable();
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(800,300));
+        treatmentPanel.add(scrollPane);
+       
         tabbedPane.add("Schedule", scheduleLabel);
         tabbedPane.add("Animal", animalLabel);
-        tabbedPane.add("Treatment", treatmentLabel);
+        tabbedPane.add("Treatment", treatmentPanel);
 
 
        
     }
-      
+    public JTable treatmentTable(){
+        ArrayList<Treatments> animalTreatments = Animal.getTreatmentList();
 
+        DefaultTableModel tableModel = new DefaultTableModel();
+        JTable table = new JTable(tableModel);
+        tableModel.addColumn("Animal ID");
+        tableModel.addColumn("Start Hour");
+        tableModel.addColumn("Description");
+        tableModel.addColumn("Duration");
+        tableModel.addColumn("Max Window");
+        tableModel.addColumn("Setup Time");
+
+        for (Treatments treatment : animalTreatments){
+            Object[] rowData = {treatment.getAnimalID(), treatment.getStartHour(), treatment.getDescription(), treatment.getDuration(), treatment.getMaxWindow(), treatment.getSetupTime()};
+            tableModel.addRow(rowData);
+        }
+        table.setFillsViewportHeight(true);
+        return table;
+       
+    }
     
     /*
     

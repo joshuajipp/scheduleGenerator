@@ -12,7 +12,7 @@ public class Animal {
     private final int ID;
     private final String NICKNAME;
     private final AnimalType SPECIES;
-    private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
+    private static ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
 
     /*
     Constructor
@@ -41,6 +41,9 @@ public class Animal {
     
     }
    
+
+
+
     /*
     add treatments in the animalTreatments arraylist if animalID matches with ID on treatments database.
     @param arrayList of treatments
@@ -66,6 +69,9 @@ public class Animal {
     }
     /*Getter */
     public ArrayList<Treatments> getAnimalTreatments() {
+        return animalTreatments;
+    }
+    public static ArrayList<Treatments> getTreatmentList(){
         return animalTreatments;
     }
 }
