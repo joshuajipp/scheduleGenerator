@@ -2,6 +2,7 @@ package edu.ucalgary.oop;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
@@ -25,22 +26,42 @@ public class Schedule {
         return animalsArray;
     }
 
-    public ArrayList<Treatments> getSchedule() {
-        Comparator<Treatments> sortKey = treatmentsComparator();
+    public ArrayList<Treatments> getSortedTreatments() {
         ArrayList<Treatments> treats = new ArrayList<Treatments>();
         for (Animal animal : getAnimalsArray()) {
             treats.addAll(animal.getAnimalTreatments());
         }
-        Collections.sort(treats, sortKey);
-        return treats;
+
+        return sortTreatments(treats);
     }
 
-    private Comparator<Treatments> treatmentsComparator() {
-        Comparator<Treatments> treatmentsCompare = Comparator
-                .comparingInt(Treatments::getMaxWindow);
+    private ArrayList<Treatments> sortTreatments(ArrayList<Treatments> treatments) {
+        Comparator<Treatments> durationCompare = Comparator.comparingInt(Treatments::getDuration).reversed();
+        Comparator<Treatments> setupCompare = Comparator.comparingInt(Treatments::getSetupTime).reversed();
+        Comparator<Treatments> startHourCompare = Comparator.comparingInt(Treatments::getStartHour);
+        Comparator<Treatments> maxWindowCompare = Comparator.comparingInt(Treatments::getMaxWindow);
 
-        return treatmentsCompare;
+        Collections.sort(treatments, durationCompare);
+        Collections.sort(treatments, setupCompare);
+        Collections.sort(treatments, startHourCompare);
+        Collections.sort(treatments, maxWindowCompare);
+
+        return treatments;
     }
+
+    // private ArrayList<Treatments> groupSetupTimes(ArrayList<Treatments>
+    // treatments) {
+    // Map<Integer, List<Treatments>> prioTreatments = treatments.stream()
+    // .collect(Collectors.groupingBy(Treatments::getSetupTime));
+    // ArrayList<Treatments> groupedTreatments = new ArrayList<Treatments>();
+    // for (Map.Entry<Integer, List<Treatments>> entry : prioTreatments.entrySet())
+    // {
+    // groupedTreatments.addAll(entry.getValue());
+    // }
+
+    // return groupedTreatments;
+
+    // }
 
     public static void main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
@@ -83,7 +104,7 @@ public class Schedule {
             e.printStackTrace();
         }
         Schedule taskSchedule = new Schedule(animals, treatments);
-        ArrayList<Treatments> sched = taskSchedule.getSchedule();
+        ArrayList<Treatments> sched = taskSchedule.getSortedTreatments();
         for (Treatments treat : sched) {
             System.out.println(String.format(
                     "animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d",
