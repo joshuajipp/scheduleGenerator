@@ -13,12 +13,14 @@ public class Animal {
     private final String NICKNAME;
     private final AnimalType SPECIES;
     private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
+
     /*
     Constructor
     @param id, name, species of the animal. If there is more than one name, species is set to AnimalType Kits.
     Otherwise, species is set if species appear in the AnimalType enum.
     Sets specific treatments for type of species including prep,feed and clean time.
      */
+    
     public Animal(int id, String name, String species) {
         this.ID = id;
         this.NICKNAME = name;
@@ -36,8 +38,9 @@ public class Animal {
             animalTreatments.add(new Treatments(ID, 0, String.format(
                     "Clean cage for %s", name), SPECIES.getFeedDuration(), 24));
         }
-
+    
     }
+   
     /*
     add treatments in the animalTreatments arraylist if animalID matches with ID on treatments database.
     @param arrayList of treatments

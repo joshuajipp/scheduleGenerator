@@ -42,7 +42,7 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         userInput.setFont(new Font("Calibri", Font.PLAIN,30));
         userInput.setBounds(100,60,130,30);
 
-        passPrompt = new JLabel ("Username");
+        passPrompt = new JLabel ("Password");
         passPrompt.setFont(new Font("Calibri", Font.PLAIN,20));
         passPrompt.setBounds(60,10,300,30);
 

@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
+import java.util.concurrent.Flow;
 
 /*
 HomePageGUI is a class that extends JFrame and implements ActionListener, and MouseListener. It displays the 
@@ -18,12 +19,7 @@ homepage for the wildlife rescue program that will show the schedules for the vo
 */
 
 public class HomePageGUI extends JFrame implements ActionListener, MouseListener { 
-    private LocalDate date = LocalDate.now(); //current date
-    private JLabel scheduleHeader; //label for schedule header
-    private JButton ScheduleButton;
-    private JButton AnimalButton;
-    private JButton TreatmentButton;
-    private JButton TasksButton;
+    private LocalDate date = LocalDate.now(); 
 
 
     /*
@@ -41,65 +37,34 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
     the schedule header lable which shows the date of which the schedule is being made for.
      */
     public void setupGUI(){
-        //create and configure the Schedule Button
-        JButton ScheduleButton  = new JButton("Schedule"); 
-        ScheduleButton.setFont(new Font("Calibri",Font.PLAIN,30));
-        ScheduleButton.addActionListener(this);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setFocusable(false);
+        this.add(tabbedPane);
+
+        JLabel scheduleLabel = new JLabel("Schedule for: " + date.plusDays(1));
         
-        //create and configure the Schedule Header to show the date for the schedule
-        scheduleHeader = new JLabel("Schedule for " + date.plusDays(1));
-        scheduleHeader.setFont(new Font("Calibri", Font.BOLD,30));
-        scheduleHeader.setForeground(Color.BLUE);
 
-        //create and configure the Animal Button
-        JButton AnimalButton = new JButton("Animals");
-        AnimalButton.setFont(new Font("Calibri",Font.PLAIN,30));
-        AnimalButton.addActionListener(this);
 
-        //create and configure the Treatments Button
-        JButton TreatmentsButton =  new JButton("Treatments");
-        TreatmentsButton.setFont(new Font("Calibri",Font.PLAIN,30));
-        TreatmentsButton.addActionListener(this);
+        JLabel animalLabel = new JLabel ("This is the animal tab");
+     
 
-        //create and configure the Tasks Button
-        JButton TasksButton = new JButton("Tasks");
-        TasksButton.setFont(new Font("Calibri",Font.PLAIN,30));
-        TasksButton.addActionListener(this);
+        JLabel treatmentLabel = new JLabel("This is the treatment tab");
 
-        //create and configure headerpanel,mainbody
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout());
-        JPanel mainBody = new JPanel();
-        mainBody.setLayout(new FlowLayout());
+        tabbedPane.add("Schedule", scheduleLabel);
+        tabbedPane.add("Animal", animalLabel);
+        tabbedPane.add("Treatment", treatmentLabel);
 
-        //added the buttons to the headerPanel and label to mainBody
-        headerPanel.add(ScheduleButton);
-        headerPanel.add(AnimalButton);
-        headerPanel.add(TreatmentsButton);
-        headerPanel.add(TasksButton);
-        mainBody.add(scheduleHeader);
 
-        //added headerPanel and mainBody to the JFrame with relative positions
-        this.add(headerPanel, BorderLayout.NORTH);
-        this.add(mainBody, BorderLayout.LINE_START);
-
+       
     }
+      
+
+    
     /*
     
      */
     public void actionPerformed(ActionEvent event){
-       if(event.getSource() == ScheduleButton){
-            //get schedule
-       }
-       if(event.getSource() == AnimalButton){
-            //get list of animals
-       }
-       if(event.getSource() == TreatmentButton){
-            //get list of treatment
-       }
-       if(event.getSource() == TasksButton){
-            //get list of tasks
-       }
+      
     }
     
     public void mouseClicked(MouseEvent event){
