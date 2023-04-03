@@ -1,6 +1,15 @@
+/**
+@author 	Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
+@version    	1.1
+@since  	   1.0
+*/
 package edu.ucalgary.oop;
 
 public enum AnimalType {
+    /*
+    Recognized types of species this program supports
+    */
     COYOTE(19, 10, 5, 5),
     FOX(0, 5, 5, 5),
     PORCUPINE(19, 0, 5, 10),
@@ -12,7 +21,8 @@ public enum AnimalType {
     private final int PREP_DURATION;
     private final int FEED_DURATION;
     private final int CLEAN_DURATION;
-
+    
+    /*Constructor */
     AnimalType(int feedStartTime, int prepDuration,
             int feedDuration, int cleanDuration) {
 
@@ -22,19 +32,19 @@ public enum AnimalType {
         this.CLEAN_DURATION = cleanDuration;
 
     }
-
+    /*Getter */
     public int getFeedStartTime() {
         return FEED_START_TIME;
     }
-
+    /*Getter */
     public int getPrepDuration() {
         return PREP_DURATION;
     }
-
+    /*Getter */
     public int getFeedDuration() {
         return FEED_DURATION;
     }
-
+    /*Getter */
     public int getCleanDuration() {
         return CLEAN_DURATION;
     }
