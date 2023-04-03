@@ -1,3 +1,9 @@
+/**
+@author 	Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
+@version    	1.2
+@since  	1.0
+*/
 package edu.ucalgary.oop;
 
 import java.util.ArrayList;
@@ -7,7 +13,12 @@ public class Animal {
     private final String NICKNAME;
     private final AnimalType SPECIES;
     private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
-
+    /*
+    Constructor
+    @param id, name, species of the animal. If there is more than one name, species is set to AnimalType Kits.
+    Otherwise, species is set if species appear in the AnimalType enum.
+    Sets specific treatments for type of species including prep,feed and clean time.
+     */
     public Animal(int id, String name, String species) {
         this.ID = id;
         this.NICKNAME = name;
@@ -27,7 +38,10 @@ public class Animal {
         }
 
     }
-
+    /*
+    add treatments in the animalTreatments arraylist if animalID matches with ID on treatments database.
+    @param arrayList of treatments
+     */
     public void addTreatments(ArrayList<Treatments> treatments) {
         for (Treatments treat : treatments) {
             if (treat.getAnimalID() == getID()) {
@@ -35,19 +49,19 @@ public class Animal {
             }
         }
     }
-
+    /*Getter */
     public int getID() {
         return ID;
     }
-
+    /*Getter */
     public String getNickname() {
         return NICKNAME;
     }
-
+    /*Getter */
     public AnimalType getSpecies() {
         return SPECIES;
     }
-
+    /*Getter */
     public ArrayList<Treatments> getAnimalTreatments() {
         return animalTreatments;
     }
