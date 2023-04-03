@@ -54,7 +54,8 @@ public class Schedule {
         for (int hour = 0; hour < 24; hour++) {
             for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
                 if (backupSchedule[hour][fiveMinBlock] == null
-                        && hour < treatment.getStartHour() + treatment.getMaxWindow()) {
+                        && hour < treatment.getStartHour() + treatment.getMaxWindow()
+                        && hour >= treatment.getStartHour()) {
                     int timeBlocks = treatment.getDuration() / 5;
                     if (12 - fiveMinBlock >= timeBlocks) {
                         while (timeBlocks > 0) {
@@ -67,14 +68,17 @@ public class Schedule {
                 }
             }
         }
-        throw new IllegalArgumentException("");
+        throw new IllegalArgumentException(
+                String.format("animalID: %d, startHour: %d, description: %s could not fit into schedule.",
+                        treatment.getAnimalID(), treatment.getStartHour(), treatment.getDescription()));
     }
 
     private void addToSchedule(Treatments treatment) {
         for (int hour = 0; hour < 24; hour++) {
             for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
                 if (schedule[hour][fiveMinBlock] == null
-                        && hour < treatment.getStartHour() + treatment.getMaxWindow()) {
+                        && hour < treatment.getStartHour() + treatment.getMaxWindow()
+                        && hour >= treatment.getStartHour()) {
                     int timeBlocks = treatment.getDuration() / 5;
                     if (12 - fiveMinBlock >= timeBlocks) {
                         while (timeBlocks > 0) {
@@ -93,10 +97,10 @@ public class Schedule {
     public void createSchedule() {
         ArrayList<Treatments> sortedTreats = getSortedTreatments();
         for (Treatments treatment : sortedTreats) {
-            addToSchedule(treatment);
             if (treatment.getMaxWindow() == 3) {
                 break;
             }
+            addToSchedule(treatment);
         }
 
     }
@@ -146,13 +150,19 @@ public class Schedule {
             e.printStackTrace();
         }
         Schedule taskSchedule = new Schedule(animals, treatments);
-        ArrayList<Treatments> sched = taskSchedule.getSortedTreatments();
-        for (Treatments treat : sched) {
-            System.out.println(String.format(
-                    "animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d",
-                    treat.getAnimalID(), treat.getStartHour(), treat.getDescription(), treat.getDuration(),
-                    treat.getMaxWindow(), treat.getSetupTime()));
+        taskSchedule.createSchedule();
+        Treatments[][] schedule = taskSchedule.getSchedule();
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 12; j++) {
+                if (schedule[i][j] != null) {
+                    System.out.println(String.format(
+                            "HOUR: %d animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d",
+                            i,
+                            schedule[i][j].getAnimalID(), schedule[i][j].getStartHour(),
+                            schedule[i][j].getDescription(), schedule[i][j].getDuration(),
+                            schedule[i][j].getMaxWindow(), schedule[i][j].getSetupTime()));
+                }
+            }
         }
-        System.out.println(sched.size());
     }
 }
