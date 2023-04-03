@@ -15,10 +15,13 @@ public class Animal {
     private static ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
 
     /*
-    Constructor
-    @param id, name, species of the animal. If there is more than one name, species is set to AnimalType Kits.
-    Otherwise, species is set if species appear in the AnimalType enum.
-    Sets specific treatments for type of species including prep,feed and clean time.
+     * Constructor
+     * 
+     * @param id, name, species of the animal. If there is more than one name,
+     * species is set to AnimalType Kits.
+     * Otherwise, species is set if species appear in the AnimalType enum.
+     * Sets specific treatments for type of species including prep,feed and clean
+     * time.
      */
     
     public Animal(int id, String name, String species) {
@@ -28,15 +31,15 @@ public class Animal {
             this.SPECIES = AnimalType.KITS;
 
             animalTreatments.add(new Treatments(ID, 0, String.format(
-                    "Clean cage for the Kits", name), SPECIES.getFeedDuration(), 24));
+                    "Clean cage for the Kits", name), SPECIES.getCleanDuration(), 24));
         } else {
             this.SPECIES = AnimalType.valueOf(species.toUpperCase());
 
             animalTreatments.add(new Treatments(ID, SPECIES.getFeedStartTime(),
-                    String.format("Feed %s", name), SPECIES.getCleanDuration(),
+                    String.format("Feed %s", name), SPECIES.getFeedDuration(),
                     3, SPECIES.getPrepDuration()));
             animalTreatments.add(new Treatments(ID, 0, String.format(
-                    "Clean cage for %s", name), SPECIES.getFeedDuration(), 24));
+                    "Clean cage for %s", name), SPECIES.getCleanDuration(), 24));
         }
     
     }
@@ -45,8 +48,10 @@ public class Animal {
 
 
     /*
-    add treatments in the animalTreatments arraylist if animalID matches with ID on treatments database.
-    @param arrayList of treatments
+     * add treatments in the animalTreatments arraylist if animalID matches with ID
+     * on treatments database.
+     * 
+     * @param arrayList of treatments
      */
     public void addTreatments(ArrayList<Treatments> treatments) {
         for (Treatments treat : treatments) {
@@ -55,19 +60,23 @@ public class Animal {
             }
         }
     }
-    /*Getter */
+
+    /* Getter */
     public int getID() {
         return ID;
     }
-    /*Getter */
+
+    /* Getter */
     public String getNickname() {
         return NICKNAME;
     }
-    /*Getter */
+
+    /* Getter */
     public AnimalType getSpecies() {
         return SPECIES;
     }
-    /*Getter */
+
+    /* Getter */
     public ArrayList<Treatments> getAnimalTreatments() {
         return animalTreatments;
     }
