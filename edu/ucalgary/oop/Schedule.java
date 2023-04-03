@@ -1,7 +1,7 @@
 package edu.ucalgary.oop;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
@@ -26,11 +26,20 @@ public class Schedule {
     }
 
     public ArrayList<Treatments> getSchedule() {
+        Comparator<Treatments> sortKey = treatmentsComparator();
         ArrayList<Treatments> treats = new ArrayList<Treatments>();
         for (Animal animal : getAnimalsArray()) {
             treats.addAll(animal.getAnimalTreatments());
         }
+        Collections.sort(treats, sortKey);
         return treats;
+    }
+
+    private Comparator<Treatments> treatmentsComparator() {
+        Comparator<Treatments> treatmentsCompare = Comparator
+                .comparingInt(Treatments::getMaxWindow);
+
+        return treatmentsCompare;
     }
 
     public static void main(String args[]) {
@@ -81,6 +90,7 @@ public class Schedule {
                     treat.getAnimalID(), treat.getStartHour(), treat.getDescription(), treat.getDuration(),
                     treat.getMaxWindow(), treat.getSetupTime()));
         }
+        System.out.println(sched.size());
 
     }
 }
