@@ -2,10 +2,11 @@ package edu.ucalgary.oop;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
+    private Treatments[][] schedule = new Treatments[24][12];
+    private Treatments[][] backupSchedule = new Treatments[24][12];
 
     public Schedule(ArrayList<Animal> animals) {
         this.animalsArray = animals;
@@ -49,19 +50,60 @@ public class Schedule {
         return treatments;
     }
 
-    // private ArrayList<Treatments> groupSetupTimes(ArrayList<Treatments>
-    // treatments) {
-    // Map<Integer, List<Treatments>> prioTreatments = treatments.stream()
-    // .collect(Collectors.groupingBy(Treatments::getSetupTime));
-    // ArrayList<Treatments> groupedTreatments = new ArrayList<Treatments>();
-    // for (Map.Entry<Integer, List<Treatments>> entry : prioTreatments.entrySet())
-    // {
-    // groupedTreatments.addAll(entry.getValue());
-    // }
+    private void addToBackupSchedule(Treatments treatment) throws IllegalArgumentException {
+        for (int hour = 0; hour < 24; hour++) {
+            for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
+                if (backupSchedule[hour][fiveMinBlock] == null
+                        && hour < treatment.getStartHour() + treatment.getMaxWindow()) {
+                    int timeBlocks = treatment.getDuration() / 5;
+                    if (12 - fiveMinBlock >= timeBlocks) {
+                        while (timeBlocks > 0) {
+                            backupSchedule[hour][fiveMinBlock] = treatment;
+                            fiveMinBlock++;
+                            timeBlocks--;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        throw new IllegalArgumentException("");
+    }
 
-    // return groupedTreatments;
+    private void addToSchedule(Treatments treatment) {
+        for (int hour = 0; hour < 24; hour++) {
+            for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
+                if (schedule[hour][fiveMinBlock] == null
+                        && hour < treatment.getStartHour() + treatment.getMaxWindow()) {
+                    int timeBlocks = treatment.getDuration() / 5;
+                    if (12 - fiveMinBlock >= timeBlocks) {
+                        while (timeBlocks > 0) {
+                            schedule[hour][fiveMinBlock] = treatment;
+                            fiveMinBlock++;
+                            timeBlocks--;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        addToBackupSchedule(treatment);
+    }
 
-    // }
+    public void createSchedule() {
+        ArrayList<Treatments> sortedTreats = getSortedTreatments();
+        for (Treatments treatment : sortedTreats) {
+            addToSchedule(treatment);
+            if (treatment.getMaxWindow() == 3) {
+                break;
+            }
+        }
+
+    }
+
+    public Treatments[][] getSchedule() {
+        return schedule;
+    }
 
     public static void main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
@@ -112,6 +154,5 @@ public class Schedule {
                     treat.getMaxWindow(), treat.getSetupTime()));
         }
         System.out.println(sched.size());
-
     }
 }
