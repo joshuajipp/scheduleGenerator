@@ -94,12 +94,62 @@ public class Schedule {
         addToBackupSchedule(treatment);
     }
 
-    private void handleTreatmentSetupTimes(ArrayList<Treatments> treatments) {
+    private void scatterSetupTimes(AnimalType animalType) {
+        ArrayList<Treatments> treatments = getSortedTreatments();
+        int coyoteIndex = 0, foxIndex = 0;
+        for (int i = 0; i < treatments.size(); i++) {
+            if (treatments.get(i).getSetupTime() == 10) {
+                coyoteIndex = i;
+                break;
+            }
+        }
+        for (int j = 0; j < treatments.size(); j++) {
+            if (treatments.get(j).getSetupTime() == 5) {
+                foxIndex = j;
+                break;
+            }
+        }
+        for (int hour = 0; hour < 24; hour++) {
+            for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
+                if (schedule[hour][fiveMinBlock] == null) {
+                    for (int i = 0; i < treatments.size(); i++) {
+                        if (treatments.get(i).getSetupTime() == 10 && hour >= 19 && hour < 22 &&
+                                12 - fiveMinBlock >= 3 && i == coyoteIndex && animalType == AnimalType.COYOTE) {
+                            for (int j = 0; j < 2; j++) {
+                                schedule[hour][fiveMinBlock] = treatments.get(coyoteIndex);
+                                fiveMinBlock++;
+                            }
+                            while (fiveMinBlock < 12) {
+                                schedule[hour][fiveMinBlock] = treatments.get(coyoteIndex);
+                                fiveMinBlock++;
+                                coyoteIndex++;
+                            }
+
+                        }
+                        if (treatments.get(i).getSetupTime() == 5 && hour >= 0 && hour < 3 &&
+                                12 - fiveMinBlock >= 2 && i == foxIndex && animalType == AnimalType.FOX) {
+
+                            schedule[hour][fiveMinBlock] = treatments.get(foxIndex);
+                            fiveMinBlock++;
+
+                            while (fiveMinBlock < 12) {
+                                schedule[hour][fiveMinBlock] = treatments.get(foxIndex);
+                                fiveMinBlock++;
+                                foxIndex++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void handleTreatmentSetupTimes() {
+        ArrayList<Treatments> treatments = getSortedTreatments();
         int coyoteCount = 0;
         int foxCount = 0;
         Treatments firstCoyote = null;
         Treatments firstFox = null;
-
         for (Treatments treat : treatments) {
             if (treat.getSetupTime() == 10) {
                 if (firstCoyote == null)
@@ -158,16 +208,17 @@ public class Schedule {
                 }
             }
 
+        } else {
+            scatterSetupTimes(AnimalType.valueOf("COYOTE"));
         }
         if (openFoxIndex != -1) {
 
             int i = 0;
             while (schedule[openFoxIndex][i] != null)
                 i++;
-            for (int j = 0; j < 2; j++) {
-                schedule[openFoxIndex][i + j] = firstFox;
-            }
-            i += 2;
+
+            schedule[openFoxIndex][i] = firstFox;
+            i++;
             for (Treatments treat : treatments) {
 
                 if (treat.getSetupTime() == 5) {
@@ -176,6 +227,8 @@ public class Schedule {
                 }
             }
 
+        } else {
+            scatterSetupTimes(AnimalType.valueOf("FOX"));
         }
     }
 
@@ -187,7 +240,7 @@ public class Schedule {
             }
             addToSchedule(treatment);
         }
-        handleTreatmentSetupTimes(sortedTreats);
+        handleTreatmentSetupTimes();
 
     }
 
