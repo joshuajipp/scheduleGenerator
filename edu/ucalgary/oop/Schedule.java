@@ -119,7 +119,7 @@ public class Schedule {
                                 schedule[hour][fiveMinBlock] = treatments.get(coyoteIndex);
                                 fiveMinBlock++;
                             }
-                            while (fiveMinBlock < 12) {
+                            while (fiveMinBlock < 12 && treatments.get(coyoteIndex).getSetupTime() == 10) {
                                 schedule[hour][fiveMinBlock] = treatments.get(coyoteIndex);
                                 fiveMinBlock++;
                                 coyoteIndex++;
@@ -132,7 +132,7 @@ public class Schedule {
                             schedule[hour][fiveMinBlock] = treatments.get(foxIndex);
                             fiveMinBlock++;
 
-                            while (fiveMinBlock < 12) {
+                            while (fiveMinBlock < 12 && treatments.get(foxIndex).getSetupTime() == 5) {
                                 schedule[hour][fiveMinBlock] = treatments.get(foxIndex);
                                 fiveMinBlock++;
                                 foxIndex++;
@@ -234,13 +234,26 @@ public class Schedule {
 
     public void createSchedule() {
         ArrayList<Treatments> sortedTreats = getSortedTreatments();
+        Treatments holdKitFeeding = null;
         for (Treatments treatment : sortedTreats) {
             if (treatment.getMaxWindow() == 3) {
                 break;
             }
-            addToSchedule(treatment);
+            if (!(treatment.getStartHour() == 20 && treatment.getDescription().equals("Kit feeding"))) {
+                addToSchedule(treatment);
+            } else {
+                holdKitFeeding = treatment;
+            }
         }
         handleTreatmentSetupTimes();
+        if (holdKitFeeding != null) {
+            addToSchedule(holdKitFeeding);
+        }
+        for (Treatments treatment : sortedTreats) {
+            if (treatment.getMaxWindow() >= 3 && treatment.getSetupTime() == 0) {
+                addToSchedule(treatment);
+            }
+        }
 
     }
 
