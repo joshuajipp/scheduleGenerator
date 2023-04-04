@@ -94,6 +94,91 @@ public class Schedule {
         addToBackupSchedule(treatment);
     }
 
+    private void handleTreatmentSetupTimes(ArrayList<Treatments> treatments) {
+        int coyoteCount = 0;
+        int foxCount = 0;
+        Treatments firstCoyote = null;
+        Treatments firstFox = null;
+
+        for (Treatments treat : treatments) {
+            if (treat.getSetupTime() == 10) {
+                if (firstCoyote == null)
+                    firstCoyote = treat;
+
+                coyoteCount++;
+            }
+            if (treat.getSetupTime() == 5) {
+                if (firstFox == null)
+                    firstFox = treat;
+                foxCount++;
+            }
+        }
+        int openCoyoteIndex = -1;
+        int openFoxIndex = -1;
+        int foxOccupies = 5 + (foxCount * 5);
+        int coyoteOccupies = 10 + (coyoteCount * 5);
+        boolean foxAlreadyFound = false;
+        boolean coyoteAlreadyFound = false;
+        for (int hour = 0; hour < 3; hour++) {
+            Treatments[] foxHour = schedule[0 + hour];
+            Treatments[] coyoteHour = schedule[19 + hour];
+            int coyoteSpaces = 0;
+            int foxSpaces = 0;
+            for (int i = 0; i < 12; i++) {
+                if (foxHour[i] == null) {
+                    foxSpaces++;
+                }
+                if (coyoteHour[i] == null) {
+                    coyoteSpaces++;
+                }
+            }
+            if (coyoteSpaces * 5 >= coyoteOccupies && !coyoteAlreadyFound) {
+                openCoyoteIndex = hour + 19;
+                coyoteAlreadyFound = true;
+            }
+            if (foxSpaces * 5 >= foxOccupies && !foxAlreadyFound) {
+                openFoxIndex = hour;
+                foxAlreadyFound = true;
+            }
+        }
+        if (openCoyoteIndex != -1) {
+
+            int i = 0;
+            while (schedule[openCoyoteIndex][i] != null)
+                i++;
+            for (int j = 0; j < 2; j++) {
+                schedule[openCoyoteIndex][i + j] = firstCoyote;
+            }
+            i += 2;
+            for (Treatments treat : treatments) {
+
+                if (treat.getSetupTime() == 10) {
+                    schedule[openCoyoteIndex][i] = treat;
+                    i++;
+                }
+            }
+
+        }
+        if (openFoxIndex != -1) {
+
+            int i = 0;
+            while (schedule[openFoxIndex][i] != null)
+                i++;
+            for (int j = 0; j < 2; j++) {
+                schedule[openFoxIndex][i + j] = firstFox;
+            }
+            i += 2;
+            for (Treatments treat : treatments) {
+
+                if (treat.getSetupTime() == 5) {
+                    schedule[openFoxIndex][i] = treat;
+                    i++;
+                }
+            }
+
+        }
+    }
+
     public void createSchedule() {
         ArrayList<Treatments> sortedTreats = getSortedTreatments();
         for (Treatments treatment : sortedTreats) {
@@ -102,11 +187,16 @@ public class Schedule {
             }
             addToSchedule(treatment);
         }
+        handleTreatmentSetupTimes(sortedTreats);
 
     }
 
     public Treatments[][] getSchedule() {
         return schedule;
+    }
+
+    public Treatments[][] getBackupSchedule() {
+        return backupSchedule;
     }
 
     public static void main(String args[]) {
@@ -161,6 +251,8 @@ public class Schedule {
                             schedule[i][j].getAnimalID(), schedule[i][j].getStartHour(),
                             schedule[i][j].getDescription(), schedule[i][j].getDuration(),
                             schedule[i][j].getMaxWindow(), schedule[i][j].getSetupTime()));
+                } else {
+                    System.out.println("null");
                 }
             }
         }
