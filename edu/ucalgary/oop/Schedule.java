@@ -1,3 +1,9 @@
+/**
+@author     Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author     Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
+@version        2.2
+@since          1.0
+*/
 package edu.ucalgary.oop;
 
 import java.sql.*;
@@ -7,26 +13,42 @@ public class Schedule {
     private ArrayList<Animal> animalsArray;
     private Treatments[][] schedule = new Treatments[24][12];
     private Treatments[][] backupSchedule = new Treatments[24][12];
-
+    /*
+     * Constructor
+     * @param arraylist of animals.
+     */
     public Schedule(ArrayList<Animal> animals) {
         this.animalsArray = animals;
     }
-
+    /*
+     * Constructor
+     * @param arraylist of animals
+     * @param arraylist of treatments
+     */
     public Schedule(ArrayList<Animal> animals, ArrayList<Treatments> treatments) {
         this.animalsArray = animals;
         addTreatments(treatments);
     }
-
+    /*
+     * Adds an array of treatments for each animal in the array
+     * @param arraylist of treatments
+     */
     public void addTreatments(ArrayList<Treatments> treatments) {
         for (Animal animal : getAnimalsArray()) {
             animal.addTreatments(treatments);
         }
     }
-
+    /*
+     * Getter
+     * @return The arraylist of animals in schedule class
+     */
     public ArrayList<Animal> getAnimalsArray() {
         return animalsArray;
     }
-
+    /*
+     * Getter
+     * @return The sorted arraylist of treatments in the schedule class
+     */
     public ArrayList<Treatments> getSortedTreatments() {
         ArrayList<Treatments> treats = new ArrayList<Treatments>();
         for (Animal animal : getAnimalsArray()) {
@@ -35,7 +57,13 @@ public class Schedule {
 
         return sortTreatments(treats);
     }
-
+    /*
+     * Sorts an ArrayList of treatments by : duration in descending order, setup in descending order, 
+     * startHour in ascending order, and maxWindow in ascending order.
+     *   
+     * @param arraylist of treatments
+     * @return the sorted arraylist of treatment 
+     */
     private ArrayList<Treatments> sortTreatments(ArrayList<Treatments> treatments) {
         Comparator<Treatments> durationCompare = Comparator.comparingInt(Treatments::getDuration).reversed();
         Comparator<Treatments> setupCompare = Comparator.comparingInt(Treatments::getSetupTime).reversed();
