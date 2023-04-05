@@ -161,11 +161,12 @@ public class HomePageGUI extends JFrame  {
                 message += time + "\n";
             }
             JOptionPane optionPane = new JOptionPane();
-            optionPane.setMessage("Volunteer is needed for the following hour: "+ message);
+            optionPane.setMessage(message);
             optionPane.setMessageType(JOptionPane.WARNING_MESSAGE);
             Object[] option = {"Confirm"};
             optionPane.setOptions(option);
-            JDialog dialog = optionPane.createDialog(null, "Custom Option Pane");
+            JDialog dialog = optionPane.createDialog(null, "VOLUNTEER REQUIRED");
+            dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //disables the exit button
             dialog.setVisible(true);
             Object selectedValue = optionPane.getValue();
             if(selectedValue.equals("Confirm")){
