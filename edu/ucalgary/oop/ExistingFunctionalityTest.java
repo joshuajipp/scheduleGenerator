@@ -19,7 +19,22 @@ public class ExistingFunctionalityTest {
     {
         assertTrue( true );
     }*/
+    @Test 
+    /*
+     * Correct animal input test, animal has a one word name
+     */
+    public void testanimalcorrectinputonename() {
+        Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
+        assertEquals(1, rightanimal.getID());
+        assertEquals("Fluffy", rightanimal.getNickname());
+        assertEquals(AnimalType.PORCUPINE, rightanimal.getSpecies());
+
+    }
+
     @Test
+    /*
+     * 
+     */
     public void testAnimaltwonames() {        
         int expID = 1;
         String expName = "Sherlock Holmes";
