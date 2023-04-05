@@ -317,12 +317,11 @@ public class Schedule {
         return backupSchedule;
     }
 
-    public static void main(String args[]) {
+    public static String[] main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
         String user = args[0];
         String password = args[1];
         Boolean isFirst = Boolean.parseBoolean(args[2]);
-        Boolean hasBackup = false;
         Connection dbConnection;
         Statement dbStatement;
         ResultSet dbResults;
@@ -362,6 +361,7 @@ public class Schedule {
         Schedule taskSchedule = new Schedule(animals, treatments);
         taskSchedule.createSchedule();
         Treatments[][] schedule = taskSchedule.getSchedule();
+        ArrayList<Integer> backupHours = taskSchedule.getBackupHours();
 
         for (int i = 0; i < 24; i++) {
             for (int j = 0; j < 12; j++) {
@@ -377,6 +377,27 @@ public class Schedule {
                 }
             }
         }
+        if (isFirst && backupHours.size() == 0) {
+
+            String[] returnArray = new String[] { "true" };
+            return returnArray;
+        }
+
+        if (!isFirst && backupHours.size() > 0) {
+
+            String[] returnArray = new String[] { "true" };
+            return returnArray;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < backupHours.size(); i++) {
+            sb.append(backupHours.get(i));
+            if (i != backupHours.size() - 1) {
+                sb.append(" ");
+            }
+        }
+        String myString = sb.toString();
+
+        return new String[] { "false", myString };
 
     }
 
