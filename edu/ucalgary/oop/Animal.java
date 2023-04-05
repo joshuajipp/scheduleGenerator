@@ -12,7 +12,7 @@ public class Animal {
     private final int ID;
     private final String NICKNAME;
     private final AnimalType SPECIES;
-    private static ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
+    private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
 
     /*
      * Constructor
@@ -23,7 +23,6 @@ public class Animal {
      * Sets specific treatments for type of species including prep,feed and clean
      * time.
      */
-    
     public Animal(int id, String name, String species) {
         this.ID = id;
         this.NICKNAME = name;
@@ -41,11 +40,8 @@ public class Animal {
             animalTreatments.add(new Treatments(ID, 0, String.format(
                     "Clean cage for %s", name), SPECIES.getCleanDuration(), 24));
         }
-    
+
     }
-   
-
-
 
     /*
      * add treatments in the animalTreatments arraylist if animalID matches with ID
@@ -78,9 +74,6 @@ public class Animal {
 
     /* Getter */
     public ArrayList<Treatments> getAnimalTreatments() {
-        return animalTreatments;
-    }
-    public static ArrayList<Treatments> getTreatmentList(){
         return animalTreatments;
     }
 }
