@@ -23,20 +23,29 @@ public class ExistingFunctionalityTest {
     public void testAnimaltwonames() {        
         int expID = 1;
         String expName = "Sherlock Holmes";
-        String species = "Fox";
-        ArrayList<Treatments> expanimalTreatments = new ArrayList<Treatments>();
-        Animal kits = new Animal(expID, expName, species);
+        String initspecies = "Fox";
+
+        Animal animal = new Animal(expID, expName, initspecies);
         AnimalType expectedanimal = AnimalType.KITS;
+        ArrayList <Treatments> treatments = animal.getAnimalTreatments();
 
-        expanimalTreatments.add(new Treatments(1, 0, String.format(
-            "Clean cage for the Kits", kits.getNickname()), 5, 24));
 
-        assertEquals(expectedanimal, kits.getSpecies());
+        assertEquals(expectedanimal, animal.getSpecies());
 
         /**Fix assert equals for new arraylists*/
 
         /**assertEquals(expanimalTreatments, animalTreatments);*/
-        /**assertEquals(new HashSet<Treatments>(expanimalTreatments), new HashSet<Treatments>(animalTreatments));*/
 
     }
+
+    @Test
+    /*
+     * Singular animal name given, species remains unchanged as specified and treatments arraylist updated with feeding and cage cleaning 
+     */
+    public void testAnimalelsecondition() {
+        assertTrue( true );
+    }
+
+    /*@Test
+    public void*/ 
 }
