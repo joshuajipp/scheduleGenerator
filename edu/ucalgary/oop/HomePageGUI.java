@@ -9,10 +9,10 @@ package edu.ucalgary.oop;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import java.sql.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
-
 
 /*
 HomePageGUI is a class that extends JFrame and implements ActionListener, and MouseListener. It displays the 
@@ -62,27 +62,47 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
        
     }
     public JTable treatmentTable(){
-      
 
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
         tableModel.addColumn("Animal ID");
+        tableModel.addColumn("Task ID");
         tableModel.addColumn("Start Hour");
-        tableModel.addColumn("Description");
-        tableModel.addColumn("Duration");
-        tableModel.addColumn("Max Window");
-        tableModel.addColumn("Setup Time");
-
+        
+        Connection dbConnection;
+        Statement dbStatement;
+        ResultSet dbResults;
+        String dbQuery;
+        try{
+            dbConnection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/EWR", "root", "Mx.ze0218");
+            dbStatement = dbConnection.createStatement();
+            dbQuery = "SELECT * FROM TREATMENTS";
+            dbResults = dbStatement.executeQuery(dbQuery);
+            while (dbResults.next()) {
+                // Add data to the table
+                Object[] rowData = new Object[6];
+                rowData[0] = dbResults.getInt("AnimalID");
+                rowData[1] = dbResults.getInt("TaskID");
+                rowData[2] = dbResults.getString("StartHour");
+                
+                tableModel.addRow(rowData);
+            }
+            dbStatement.close();
+            dbConnection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         table.setFillsViewportHeight(true);
         return table;
        
     }
-    
+
     /*
     
      */
     public void actionPerformed(ActionEvent event){
-      
+      //handle the ok
     }
     
     public void mouseClicked(MouseEvent event){
@@ -99,8 +119,38 @@ public class HomePageGUI extends JFrame implements ActionListener, MouseListener
     @param args Optional command-line argument
      */
     public static void main(String[] args) {
+        
         EventQueue.invokeLater(() -> {
             new HomePageGUI().setVisible(true);        
         });
+        Schedule.main(args);
+        //String[] volunteerChecker = Schedule.main(args); //return either {"true"} or {"false","1,2"}
+        String[] volunteerChecker = {"false","1,2"};
+        String boolCheck = volunteerChecker[0];
+        if (boolCheck == "true"){
+            //read from the txt file
+            //display on GUI
+            //create instance of class to access method
+
+        }
+        if (boolCheck == "false"){
+            String volunteerTime = volunteerChecker[1];
+            String[] arrOfVolunTime = volunteerTime.split(",");
+            String message = "Vounteer is needed for the following times: \n";
+            for (String time : arrOfVolunTime){
+                message += time + "\n";
+            }
+            JOptionPane.showMessageDialog(null, message);   
+           
+        }
+
+        //getting return here from schedule(string = boolean)
+        //get false if volunteer list have items (need volunteer) {"false","1,3"} 
+        //need pop up window that will ask for volunteer confirmation for the hours. On click rerun main with "false"
+        //get true if schedule is created 
+        // if true read from txt file.
+
+        
     }
+    
 }
