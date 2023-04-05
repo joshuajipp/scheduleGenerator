@@ -7,6 +7,8 @@
 package edu.ucalgary.oop;
 
 import org.junit.*;
+import org.junit.runners.model.TestTimedOutException;
+
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -33,23 +35,34 @@ public class ExistingFunctionalityTest {
 
     @Test
     /*
-     * 
+     * Correct animal input test, animal has two names so checks for species change to kits and correct treatments
+     * "if" statement is invoked
      */
     public void testAnimaltwonames() {        
-        int expID = 1;
-        String expName = "Sherlock Holmes";
-        String initspecies = "Fox";
-
-        Animal animal = new Animal(expID, expName, initspecies);
+        Animal animal = new Animal(5, "Sherlock Holmes", "Raccoon");
         AnimalType expectedanimal = AnimalType.KITS;
-        ArrayList <Treatments> treatments = animal.getAnimalTreatments();
-
-
+        ArrayList <Treatments> testtreatments = animal.getAnimalTreatments();
+        ArrayList <Treatments> exptreatments = new ArrayList<Treatments>();
+        exptreatments.add(new Treatments(5, 0, "Feed Sherlock Holmes", 0,
+        3, 0));
+        exptreatments.add(new Treatments(5, 0, "Clean cage for Sherlock Holmes", 30, 24));
+        for (int i = 0; i < testtreatments.size(); i++) {
+            Treatments test = testtreatments.get(i);
+            Treatments exp = exptreatments.get(i);
+        
+            assertEquals(exp.getAnimalID(), test.getAnimalID());
+            assertEquals(exp.getStartHour(), test.getStartHour());
+            assertEquals(exp.getDescription(), test.getDescription());
+            assertEquals(exp.getDuration(), test.getDuration());
+            assertEquals(exp.getMaxWindow(), test.getMaxWindow());
+            if (i==1) {
+                assertEquals(exp.getSetupTime(), test.getSetupTime());
+            }
+        }
         assertEquals(expectedanimal, animal.getSpecies());
-
+        /*assertEquals(2, testtreatments.size());*/
+        assertEquals("Sherlock Holmes", animal.getNickname());
         /**Fix assert equals for new arraylists*/
-
-        /**assertEquals(expanimalTreatments, animalTreatments);*/
 
     }
 
