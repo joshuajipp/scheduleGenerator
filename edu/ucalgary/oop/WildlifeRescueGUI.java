@@ -80,9 +80,12 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
         username = userInput.getText();
         password = passInput.getText();
         if(validateLogin()){
-            String[] arguments = {username,password};
-            Schedule.main(arguments);
+            String[] arguments = {username,password,"true"};
             dispose();
+            HomePageGUI.main(arguments);
+
+           
+            HomePageGUI.main(arguments);
             EventQueue.invokeLater(() -> {
                 new HomePageGUI().setVisible(true);        
             });    
