@@ -8,13 +8,38 @@ package edu.ucalgary.oop;
 
 import org.junit.*;
 import org.junit.runners.model.TestTimedOutException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class ExistingFunctionalityTest {
+    
+    private final int animalId;
+    private final String nickname;
+    private final AnimalType species;
+    
+    public ExistingFunctionalityTest(int animalId, String nickname, AnimalType species) {
+        this.animalId = animalId;
+        this.nickname = nickname;
+        this.species = species;
+    }
+    
+    @Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {1, "Fluffy", AnimalType.PORCUPINE},
+                {2, "Woof", AnimalType.COYOTE},
+                {3, "Sherlock Holmes", AnimalType.KITS}
+        });
+    }
 
     /* @Before */
 
@@ -173,5 +198,40 @@ public class ExistingFunctionalityTest {
     assertEquals(2, treatments2.size());
 
     }
+    
+    @Test
+    public void testAnimalTypeValues() {
+        assertEquals(19, AnimalType.COYOTE.getFeedStartTime());
+        assertEquals(10, AnimalType.COYOTE.getPrepDuration());
+        assertEquals(5, AnimalType.COYOTE.getFeedDuration());
+        assertEquals(5, AnimalType.COYOTE.getCleanDuration());
+
+        assertEquals(0, AnimalType.FOX.getFeedStartTime());
+        assertEquals(5, AnimalType.FOX.getPrepDuration());
+        assertEquals(5, AnimalType.FOX.getFeedDuration());
+        assertEquals(5, AnimalType.FOX.getCleanDuration());
+
+        assertEquals(19, AnimalType.PORCUPINE.getFeedStartTime());
+        assertEquals(0, AnimalType.PORCUPINE.getPrepDuration());
+        assertEquals(5, AnimalType.PORCUPINE.getFeedDuration());
+        assertEquals(10, AnimalType.PORCUPINE.getCleanDuration());
+
+        assertEquals(8, AnimalType.BEAVER.getFeedStartTime());
+        assertEquals(0, AnimalType.BEAVER.getPrepDuration());
+        assertEquals(5, AnimalType.BEAVER.getFeedDuration());
+        assertEquals(5, AnimalType.BEAVER.getCleanDuration());
+
+        assertEquals(0, AnimalType.RACCOON.getFeedStartTime());
+        assertEquals(0, AnimalType.RACCOON.getPrepDuration());
+        assertEquals(5, AnimalType.RACCOON.getFeedDuration());
+        assertEquals(5, AnimalType.RACCOON.getCleanDuration());
+
+        assertEquals(0, AnimalType.KITS.getFeedStartTime());
+        assertEquals(0, AnimalType.KITS.getPrepDuration());
+        assertEquals(0, AnimalType.KITS.getFeedDuration());
+        assertEquals(30, AnimalType.KITS.getCleanDuration());
+    }
+    
+    
 
 }
