@@ -13,24 +13,31 @@ public class Schedule {
     private ArrayList<Animal> animalsArray;
     private Treatments[][] schedule = new Treatments[24][12];
     private Treatments[][] backupSchedule = new Treatments[24][12];
+
     /*
      * Constructor
+     * 
      * @param arraylist of animals.
      */
     public Schedule(ArrayList<Animal> animals) {
         this.animalsArray = animals;
     }
+
     /*
      * Constructor
+     * 
      * @param arraylist of animals
+     * 
      * @param arraylist of treatments
      */
     public Schedule(ArrayList<Animal> animals, ArrayList<Treatments> treatments) {
         this.animalsArray = animals;
         addTreatments(treatments);
     }
+
     /*
      * Adds an array of treatments for each animal in the array
+     * 
      * @param arraylist of treatments
      */
     public void addTreatments(ArrayList<Treatments> treatments) {
@@ -38,15 +45,19 @@ public class Schedule {
             animal.addTreatments(treatments);
         }
     }
+
     /*
      * Getter
+     * 
      * @return The arraylist of animals in schedule class
      */
     public ArrayList<Animal> getAnimalsArray() {
         return animalsArray;
     }
+
     /*
      * Getter
+     * 
      * @return The sorted arraylist of treatments in the schedule class
      */
     public ArrayList<Treatments> getSortedTreatments() {
@@ -57,12 +68,15 @@ public class Schedule {
 
         return sortTreatments(treats);
     }
+
     /*
-     * Sorts an ArrayList of treatments by : duration in descending order, setup in descending order, 
+     * Sorts an ArrayList of treatments by : duration in descending order, setup in
+     * descending order,
      * startHour in ascending order, and maxWindow in ascending order.
-     *   
+     * 
      * @param arraylist of treatments
-     * @return the sorted arraylist of treatment 
+     * 
+     * @return the sorted arraylist of treatment
      */
     private ArrayList<Treatments> sortTreatments(ArrayList<Treatments> treatments) {
         Comparator<Treatments> durationCompare = Comparator.comparingInt(Treatments::getDuration).reversed();
@@ -285,6 +299,16 @@ public class Schedule {
 
     }
 
+    public ArrayList<Integer> getBackupHours() {
+        ArrayList<Integer> backupHours = new ArrayList<Integer>();
+        for (int i = 0; i < 24; i++) {
+            if (backupSchedule[i][0] != null) {
+                backupHours.add(i);
+            }
+        }
+        return backupHours;
+    }
+
     public Treatments[][] getSchedule() {
         return schedule;
     }
@@ -293,10 +317,11 @@ public class Schedule {
         return backupSchedule;
     }
 
-    public static void main(String args[]) {
+    public static String[] main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
         String user = args[0];
         String password = args[1];
+        Boolean isFirst = Boolean.parseBoolean(args[2]);
         Connection dbConnection;
         Statement dbStatement;
         ResultSet dbResults;
@@ -336,6 +361,8 @@ public class Schedule {
         Schedule taskSchedule = new Schedule(animals, treatments);
         taskSchedule.createSchedule();
         Treatments[][] schedule = taskSchedule.getSchedule();
+        ArrayList<Integer> backupHours = taskSchedule.getBackupHours();
+
         for (int i = 0; i < 24; i++) {
             for (int j = 0; j < 12; j++) {
                 if (schedule[i][j] != null) {
@@ -350,6 +377,28 @@ public class Schedule {
                 }
             }
         }
+        if (isFirst && backupHours.size() == 0) {
+
+            String[] returnArray = new String[] { "true" };
+            return returnArray;
+        }
+
+        if (!isFirst && backupHours.size() > 0) {
+
+            String[] returnArray = new String[] { "true" };
+            return returnArray;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < backupHours.size(); i++) {
+            sb.append(backupHours.get(i));
+            if (i != backupHours.size() - 1) {
+                sb.append(" ");
+            }
+        }
+        String myString = sb.toString();
+
+        return new String[] { "false", myString };
+
     }
 
 }
