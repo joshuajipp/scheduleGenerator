@@ -83,12 +83,8 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
             String[] arguments = {username,password,"true"};
             dispose();
             HomePageGUI.main(arguments);
-
-           
-            HomePageGUI.main(arguments);
-            EventQueue.invokeLater(() -> {
-                new HomePageGUI().setVisible(true);        
-            });    
+         
+       
         }
             
     }

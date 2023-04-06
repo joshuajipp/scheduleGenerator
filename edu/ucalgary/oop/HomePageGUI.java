@@ -27,35 +27,35 @@ public class HomePageGUI extends JFrame  {
     private ResultSet dbResults;
     private String username;
     private String password;
-
+    public HomePageGUI(){}
     /*
     HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
     and the title. It also calls setupGUI() to add buttons or text in the page.
      */
-    public HomePageGUI(){
+    public HomePageGUI(String username,String password){
         super("Wildlife Rescue"); //call to JFrame constructor with title arguement
+        this.username = username;
+        this.password = password;
         setupGUI(); //calls to setupGUI method
         setSize(800,500); //sets the size of the JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set default close operation
     }
-    public HomePageGUI(ArrayList<String> scheduleList){
-    
+    public HomePageGUI(ArrayList<String> scheduleList,String username, String password){
         super("Wildlife Rescue"); //call to JFrame constructor with title arguement
         this.scheduleList = scheduleList;
+        this.username = username;
+        this.password = password;
         setupGUI(); //calls to setupGUI method
         setSize(800,500); //sets the size of the JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set default close operation
     }
-    public HomePageGUI(String username, String password){
-        this.username  = username;
-        this.password = password;
-    }
+
     /*
     This constructor sets up the GUI by creating and configurating the Schedule, Animals, Treatments and Tasks buttons, as well as 
     the schedule header lable which shows the date of which the schedule is being made for.
      */
     public void setupGUI(){
-        
+        System.out.println(password);
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
         this.add(tabbedPane);
@@ -96,7 +96,7 @@ public class HomePageGUI extends JFrame  {
     private void createConnection(){
         try{
             dbConnection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/EWR","root", "Mx.ze0218");
+                "jdbc:mysql://localhost:3306/EWR",username, password);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -213,24 +213,25 @@ public class HomePageGUI extends JFrame  {
     public static void main(String[] args) { 
         String username = args[0];
         String password = args[1];
-        new HomePageGUI(username,password);
+   
 
-        Schedule.main(args);
-        String[] volunteerChecker = Schedule.main(args); 
+        //Schedule.main(args);
+        //String[] volunteerChecker = Schedule.main(args); 
+        String[] volunteerChecker = {"false","1 2"};
         String boolCheck = volunteerChecker[0];
         if (boolCheck.equals("true")){
             HomePageGUI homePage = new HomePageGUI();
             ArrayList<String> scheduleList = homePage.schedReadFile();
             EventQueue.invokeLater(() -> {
-                new HomePageGUI(scheduleList).setVisible(true);        
+                new HomePageGUI(scheduleList,username,password).setVisible(true);        
             });
         }
         if (boolCheck.equals("false")){
             EventQueue.invokeLater(() -> {
-                new HomePageGUI().setVisible(true);        
+                new HomePageGUI(username, password).setVisible(true);        
             });
             String volunteerTime = volunteerChecker[1];
-            String[] arrOfVolunTime = volunteerTime.split(",");
+            String[] arrOfVolunTime = volunteerTime.split(" ");
             String message = "Vounteer is needed for the following times: \n";
             for (String time : arrOfVolunTime){
                 message += time + "\n";
@@ -247,6 +248,7 @@ public class HomePageGUI extends JFrame  {
             if(selectedValue.equals("Confirm")){
                 String [] arguments = {username,password,"false"};
                 HomePageGUI.main(arguments);
+                
             }   
         }
     }
