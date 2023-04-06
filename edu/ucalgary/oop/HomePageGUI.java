@@ -134,9 +134,8 @@ public class HomePageGUI extends JFrame  {
     @param args Optional command-line argument
      */
     public static void main(String[] args) { 
-        EventQueue.invokeLater(() -> {
-            new HomePageGUI().setVisible(true);        
-        });
+        String username = args[0];
+        String password = args[1];
 
         Schedule.main(args);
         //String[] volunteerChecker = Schedule.main(args); //return either {"true"} or {"false","1,2"}
@@ -148,12 +147,11 @@ public class HomePageGUI extends JFrame  {
             EventQueue.invokeLater(() -> {
                 new HomePageGUI(scheduleList).setVisible(true);        
             });
-           
         }
-    
-    
         if (boolCheck.equals("false")){
-           
+            EventQueue.invokeLater(() -> {
+                new HomePageGUI().setVisible(true);        
+            });
             String volunteerTime = volunteerChecker[1];
             String[] arrOfVolunTime = volunteerTime.split(",");
             String message = "Vounteer is needed for the following times: \n";
@@ -170,11 +168,9 @@ public class HomePageGUI extends JFrame  {
             dialog.setVisible(true);
             Object selectedValue = optionPane.getValue();
             if(selectedValue.equals("Confirm")){
-            // Do something if the "Yes, please" button is clicked
-            }
-            
+                String [] arguments = {username,password,"false"};
+                HomePageGUI.main(arguments);
+            }   
         }
-        
     }
-   
 }
