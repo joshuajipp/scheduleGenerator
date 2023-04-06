@@ -35,10 +35,10 @@ public class Animal {
             this.SPECIES = AnimalType.valueOf(species.toUpperCase());
 
             animalTreatments.add(new Treatments(ID, SPECIES.getFeedStartTime(),
-                    String.format("Feed %s", name), SPECIES.getFeedDuration(),
+                    "Feeding", SPECIES.getFeedDuration(),
                     3, SPECIES.getPrepDuration()));
-            animalTreatments.add(new Treatments(ID, 0, String.format(
-                    "Clean cage for %s", name), SPECIES.getCleanDuration(), 24));
+            animalTreatments.add(new Treatments(ID, 0,
+                    String.format("Clean %s Cage", SPECIES.name().toLowerCase()), SPECIES.getCleanDuration(), 24));
         }
 
     }
