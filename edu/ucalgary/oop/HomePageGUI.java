@@ -21,8 +21,12 @@ homepage for the wildlife rescue program that will show the schedules for the vo
 
 public class HomePageGUI extends JFrame  { 
     private LocalDate date = LocalDate.now();
-    ArrayList<String> scheduleList = new ArrayList<String>();
-
+    private ArrayList<String> scheduleList = new ArrayList<String>();
+    private Connection dbConnection;
+    private Statement dbStatement;
+    private ResultSet dbResults;
+    private String username;
+    private String password;
 
     /*
     HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
@@ -42,11 +46,16 @@ public class HomePageGUI extends JFrame  {
         setSize(800,500); //sets the size of the JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set default close operation
     }
+    public HomePageGUI(String username, String password){
+        this.username  = username;
+        this.password = password;
+    }
     /*
     This constructor sets up the GUI by creating and configurating the Schedule, Animals, Treatments and Tasks buttons, as well as 
     the schedule header lable which shows the date of which the schedule is being made for.
      */
     public void setupGUI(){
+        
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
         this.add(tabbedPane);
@@ -57,65 +66,133 @@ public class HomePageGUI extends JFrame  {
         JList<String> scheduleJList = new JList<>(scheduleList.toArray(new String[0]));
         JScrollPane scrollPanel = new JScrollPane(scheduleJList);
         scrollPanel.setPreferredSize(new Dimension(800,300));
-       
         schedulePanel.add(scrollPanel,BorderLayout.CENTER);
       
-        JLabel animalLabel = new JLabel ("This is the animal tab");
-     
+        JPanel animalPanel = new JPanel(new BorderLayout());
+        JTable animalTable  = animalTable();
+        JScrollPane animalScrollPane = new JScrollPane(animalTable);
+        animalScrollPane.setPreferredSize(new Dimension(800,300));
+        animalPanel.add(animalScrollPane);
+
+        JPanel taskPanel = new JPanel(new BorderLayout());
+        JTable taskTable  = taskTable();
+        JScrollPane taskScrollPane = new JScrollPane(taskTable);
+        taskScrollPane.setPreferredSize(new Dimension(800,300));
+        taskPanel.add(taskScrollPane);
+        
 
         JPanel treatmentPanel = new JPanel(new BorderLayout());
-        JTable table  = treatmentTable();
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(800,300));
-        treatmentPanel.add(scrollPane);
+        JTable treatmentTable  = treatmentTable();
+        JScrollPane TreatmentScrollPane = new JScrollPane(treatmentTable);
+        TreatmentScrollPane.setPreferredSize(new Dimension(800,300));
+        treatmentPanel.add(TreatmentScrollPane);
        
         tabbedPane.add("Schedule", schedulePanel);
-        tabbedPane.add("Animal", animalLabel);
+        tabbedPane.add("Animal", animalPanel);
+        tabbedPane.add("Task", taskPanel);
         tabbedPane.add("Treatment", treatmentPanel);
        
     }
-   
-  
+    private void createConnection(){
+        try{
+            dbConnection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/EWR","root", "Mx.ze0218");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public void close(){
+        try{
+            dbResults.close();
+            dbConnection.close();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public JTable animalTable(){
+        DefaultTableModel tableModel = new DefaultTableModel();
+        JTable table = new JTable(tableModel);
+        tableModel.addColumn("Animal ID");
+        tableModel.addColumn("Nickname");
+        tableModel.addColumn("Species");
+        try{  
+            createConnection();
+            dbStatement = dbConnection.createStatement();
+            dbResults = dbStatement.executeQuery("SELECT * FROM ANIMALS");
+            while (dbResults.next()) {
+                // Add data to the table
+                Object[] rowData = new Object[3];
+                rowData[0] = dbResults.getInt("AnimalID");
+                rowData[1] = dbResults.getString("AnimalNickname");
+                rowData[2] = dbResults.getString("AnimalSpecies");
+                tableModel.addRow(rowData);
+            }
+            close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        table.setFillsViewportHeight(true);
+        return table;
+    }
+    public JTable taskTable(){
+        DefaultTableModel tableModel = new DefaultTableModel();
+        JTable table = new JTable(tableModel);
+        tableModel.addColumn("Task ID");
+        tableModel.addColumn("Description");
+        tableModel.addColumn("Duration");  
+        tableModel.addColumn("Max Window");
+        try{  
+            createConnection();
+            dbStatement = dbConnection.createStatement();
+            dbResults = dbStatement.executeQuery("SELECT * FROM TASKS");
+            while (dbResults.next()) {
+                // Add data to the table
+                Object[] rowData = new Object[4];
+                rowData[0] = dbResults.getInt("TaskID");
+                rowData[1] = dbResults.getString("Description");
+                rowData[2] = dbResults.getInt("Duration");
+                rowData[3] = dbResults.getInt("MaxWindow");
+                tableModel.addRow(rowData);
+            }
+            close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        table.setFillsViewportHeight(true);
+        return table;
+    }
+ 
     public JTable treatmentTable(){
-
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
         tableModel.addColumn("Animal ID");
         tableModel.addColumn("Task ID");
         tableModel.addColumn("Start Hour");
-        
-        Connection dbConnection;
-        Statement dbStatement;
-        ResultSet dbResults;
-        String dbQuery;
         try{
-            dbConnection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/EWR", "root", "Mx.ze0218");
+            createConnection();
             dbStatement = dbConnection.createStatement();
-            dbQuery = "SELECT * FROM TREATMENTS";
-            dbResults = dbStatement.executeQuery(dbQuery);
+            dbResults = dbStatement.executeQuery("SELECT * FROM TREATMENTS");
             while (dbResults.next()) {
                 // Add data to the table
-                Object[] rowData = new Object[6];
+                Object[] rowData = new Object[3];
                 rowData[0] = dbResults.getInt("AnimalID");
                 rowData[1] = dbResults.getInt("TaskID");
                 rowData[2] = dbResults.getString("StartHour");
-                
+
                 tableModel.addRow(rowData);
             }
-            dbStatement.close();
-            dbConnection.close();
+            close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         table.setFillsViewportHeight(true);
         return table;
-       
     }
+ 
      public ArrayList<String> schedReadFile(){
         try{
-            File schedFile = new File("sample.txt");
-            Scanner schedReader = new Scanner(schedFile);
+            File filename  = new File(date.plusDays(1) + ".txt");
+            Scanner schedReader = new Scanner(filename);
             while(schedReader.hasNextLine()){
                 String data = schedReader.nextLine();
                 scheduleList.add(data);
@@ -136,10 +213,10 @@ public class HomePageGUI extends JFrame  {
     public static void main(String[] args) { 
         String username = args[0];
         String password = args[1];
+        new HomePageGUI(username,password);
 
         Schedule.main(args);
-        //String[] volunteerChecker = Schedule.main(args); //return either {"true"} or {"false","1,2"}
-        String[] volunteerChecker = {"false","1,2"};
+        String[] volunteerChecker = Schedule.main(args); 
         String boolCheck = volunteerChecker[0];
         if (boolCheck.equals("true")){
             HomePageGUI homePage = new HomePageGUI();
