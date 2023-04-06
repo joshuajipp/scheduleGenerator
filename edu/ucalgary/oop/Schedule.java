@@ -138,12 +138,23 @@ public class Schedule {
                         treatment.getAnimalID(), treatment.getStartHour(), treatment.getDescription()));
     }
 
+    /*
+     * 
+     * Adds the given treatment to the schedule. If there is not enough space in the
+     * schedule, the treatment will be added to the backup schedule instead.
+     * 
+     * @param treatment The treatment to add to the schedule.
+     */
     private void addToSchedule(Treatments treatment) {
+        // Iterates through each hour and five minute block in the schedule to find an
+        // available time slot for the treatment.
         for (int hour = 0; hour < 24; hour++) {
             for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
                 if (schedule[hour][fiveMinBlock] == null
                         && hour < treatment.getStartHour() + treatment.getMaxWindow()
                         && hour >= treatment.getStartHour()) {
+                    // Calculates the number of time blocks needed for the treatment and checks if
+                    // there is enough space to fit it in.
                     int timeBlocks = treatment.getDuration() / 5;
                     if (12 - fiveMinBlock >= timeBlocks) {
                         while (timeBlocks > 0) {
@@ -159,6 +170,29 @@ public class Schedule {
         addToBackupSchedule(treatment);
     }
 
+    /*
+     * 
+     * This method is responsible for scattering treatments with setup times
+     * throughout the schedule
+     * The method first retrieves the sorted list of treatments from the
+     * getSortedTreatments() method.
+     * It then finds the index of the treatments with a setup time of 10 for coyotes
+     * and 5 for foxes.
+     * Using nested for loops, the method iterates through each hour and five-minute
+     * block of the schedule grid and checks if the current block is null.
+     * If it is null, the method loops through the treatments list to find the
+     * treatment with the corresponding setup time
+     * and current animal type. If it finds a matching treatment, it checks if the
+     * current hour and five-minute block fit within the treatment's scheduling
+     * constraints.
+     * If the scheduling constraints are met, the method schedules the treatment in
+     * the current and subsequent blocks until the setup time is complete.
+     * If the scheduling constraints are not met, the method continues to the next
+     * available block in the schedule.
+     * 
+     * @param animalType - an AnimalType parameter representing the type of animal's
+     * treatments to schedule (either COYOTE or FOX)
+     */
     private void scatterSetupTimes(AnimalType animalType) {
         ArrayList<Treatments> treatments = getSortedTreatments();
         int coyoteIndex = 0, foxIndex = 0;
