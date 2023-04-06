@@ -9,6 +9,7 @@ package edu.ucalgary.oop;
 import java.sql.*;
 import java.util.*;
 import java.time.*;
+import java.io.*;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
@@ -439,7 +440,17 @@ public class Schedule {
 
             }
         }
-        System.out.println(scheduleString);
+
+        try {
+            File file = new File("filename.txt");
+            FileWriter writer = new FileWriter(file);
+            writer.write(scheduleString);
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
 
     }
 
@@ -487,23 +498,8 @@ public class Schedule {
         }
         Schedule taskSchedule = new Schedule(animals, treatments);
         taskSchedule.createSchedule();
-        Treatments[][] schedule = taskSchedule.getSchedule();
         ArrayList<Integer> backupHours = taskSchedule.getBackupHours();
 
-        for (int i = 0; i < 24; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (schedule[i][j] != null) {
-                    System.out.println(String.format(
-                            "{HOUR: %d animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d},",
-                            i,
-                            schedule[i][j].getAnimalID(), schedule[i][j].getStartHour(),
-                            schedule[i][j].getDescription(), schedule[i][j].getDuration(),
-                            schedule[i][j].getMaxWindow(), schedule[i][j].getSetupTime()));
-                } else {
-                    System.out.println("null,");
-                }
-            }
-        }
         if (isFirst && backupHours.size() == 0) {
             taskSchedule.writeSchedule(false);
             String[] returnArray = new String[] { "true" };
