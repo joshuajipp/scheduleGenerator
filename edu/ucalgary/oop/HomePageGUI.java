@@ -7,10 +7,14 @@
 package edu.ucalgary.oop;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.time.LocalDate;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
@@ -19,7 +23,7 @@ HomePageGUI is a class that extends JFrame and implements ActionListener, and Mo
 homepage for the wildlife rescue program that will show the schedules for the volunteers.
 */
 
-public class HomePageGUI extends JFrame  { 
+public class HomePageGUI extends JFrame implements ActionListener { 
     private LocalDate date = LocalDate.now();
     private ArrayList<String> scheduleList = new ArrayList<String>();
     private Connection dbConnection;
@@ -27,6 +31,7 @@ public class HomePageGUI extends JFrame  {
     private ResultSet dbResults;
     private String username;
     private String password;
+    private JTable treatmentTable;
     public HomePageGUI(){}
     /*
     HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
@@ -55,7 +60,6 @@ public class HomePageGUI extends JFrame  {
     the schedule header lable which shows the date of which the schedule is being made for.
      */
     public void setupGUI(){
-        System.out.println(password);
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
         this.add(tabbedPane);
@@ -86,13 +90,36 @@ public class HomePageGUI extends JFrame  {
         JScrollPane TreatmentScrollPane = new JScrollPane(treatmentTable);
         TreatmentScrollPane.setPreferredSize(new Dimension(800,300));
         treatmentPanel.add(TreatmentScrollPane);
-       
+        JButton saveButton = new JButton("Save");
+        saveButton.setFont(new Font("Calibri", Font.PLAIN,30));
+        saveButton.addActionListener(this);
+        treatmentPanel.add(saveButton,BorderLayout.SOUTH);
+
         tabbedPane.add("Schedule", schedulePanel);
         tabbedPane.add("Animal", animalPanel);
         tabbedPane.add("Task", taskPanel);
         tabbedPane.add("Treatment", treatmentPanel);
-       
     }
+    public void actionPerformed(ActionEvent event) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/EWR",username,password);
+             Statement stmt = conn.createStatement()) {
+             
+            // DefaultTableModel tableModel = (DefaultTableModel) treatmentTable.getModel();
+            // int rowCount = tableModel.getRowCount();
+            // for (int i = 0; i < rowCount; i++) {
+            //     int animalID = (int) tableModel.getValueAt(i, 0);
+            //     int taskID = (int) tableModel.getValueAt(i, 1);
+            //     String startHour = (String) tableModel.getValueAt(i, 2);
+            //     String updateQuery = "UPDATE TREATMENTS SET StartHour = '" + startHour
+            //             + "' WHERE AnimalID = " + animalID + " AND TaskID = " + taskID;
+            //     stmt.executeUpdate(updateQuery);
+            // }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
     private void createConnection(){
         try{
             dbConnection = DriverManager.getConnection(
@@ -186,6 +213,7 @@ public class HomePageGUI extends JFrame  {
             e.printStackTrace();
         }
         table.setFillsViewportHeight(true);
+        this.treatmentTable = table;
         return table;
     }
  
@@ -217,7 +245,7 @@ public class HomePageGUI extends JFrame  {
 
         //Schedule.main(args);
         //String[] volunteerChecker = Schedule.main(args); 
-        String[] volunteerChecker = {"false","1 2"};
+        String[] volunteerChecker = {"true","1 2"};
         String boolCheck = volunteerChecker[0];
         if (boolCheck.equals("true")){
             HomePageGUI homePage = new HomePageGUI();
