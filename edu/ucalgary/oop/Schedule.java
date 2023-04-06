@@ -94,6 +94,18 @@ public class Schedule {
         return treatments;
     }
 
+    /*
+     * 
+     * This method takes a Treatment object as input and searches through an array
+     * of Animal objects to find the first Animal that has the given Treatment in
+     * its list of treatments.
+     * 
+     * @param treat A Treatments object to search for in the Animal objects'
+     * treatments lists.
+     * 
+     * @return An Animal object that has the given Treatment in its treatments list
+     * or null if no such Animal is found.
+     */
     private Animal getAnimalFromTreatment(Treatments treat) {
         for (Animal animal : getAnimalsArray()) {
             if (animal.getAnimalTreatments().contains(treat)) {
