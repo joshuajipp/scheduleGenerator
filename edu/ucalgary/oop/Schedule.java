@@ -9,6 +9,7 @@ package edu.ucalgary.oop;
 import java.sql.*;
 import java.util.*;
 import java.time.*;
+import java.io.*;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
@@ -327,6 +328,56 @@ public class Schedule {
         return backupSchedule;
     }
 
+    private String writeBackup(int hour, String scheduleString) {
+        HashMap<Treatments, Integer> treatmentCount = new HashMap<Treatments, Integer>();
+        for (int j = 0; j < 12; j++) {
+            if (backupSchedule[hour][j] != null) {
+                if (treatmentCount.containsKey(backupSchedule[hour][j])) {
+                    treatmentCount.put(backupSchedule[hour][j], treatmentCount.get(backupSchedule[hour][j]) + 1);
+                } else {
+                    treatmentCount.put(backupSchedule[hour][j], 1);
+                }
+            }
+        }
+        for (int j = 0; j < 12; j++) {
+            if (backupSchedule[hour][j] != null && treatmentCount.get(backupSchedule[hour][j]) == 1) {
+                if (backupSchedule[hour][j].getDescription().equals("Feeding")) {
+                    Animal currAnimal = getAnimalFromTreatment(backupSchedule[hour][j]);
+                    ArrayList<String> animalNames = new ArrayList<String>();
+                    animalNames.add((getAnimalFromTreatment(backupSchedule[hour][j]).getNickname()));
+                    j++;
+                    while (j < 12 && backupSchedule[hour][j] != null
+                            && currAnimal.getSpecies() == (getAnimalFromTreatment(
+                                    backupSchedule[hour][j]).getSpecies())) {
+                        animalNames.add((getAnimalFromTreatment(backupSchedule[hour][j]).getNickname()));
+                        j++;
+                    }
+                    String animalNamesString = "";
+                    for (int k = 0; k < animalNames.size(); k++) {
+                        animalNamesString += animalNames.get(k);
+                        if (k != animalNames.size() - 1) {
+                            animalNamesString += ", ";
+                        }
+
+                    }
+                    scheduleString += String.format("%s - %s (%d: %s)\n", backupSchedule[hour][j - 1].getDescription(),
+                            getAnimalFromTreatment(backupSchedule[hour][j - 1]).getSpecies().name().toLowerCase(),
+                            animalNames.size(), animalNamesString);
+                } else {
+                    scheduleString += String.format("%s (%s)\n", backupSchedule[hour][j].getDescription(),
+                            getAnimalFromTreatment(backupSchedule[hour][j]).getNickname());
+                }
+
+            }
+            if (j < 12 && backupSchedule[hour][j] != null) {
+                treatmentCount.put(backupSchedule[hour][j], treatmentCount.get(backupSchedule[hour][j]) - 1);
+            }
+
+        }
+
+        return scheduleString;
+    }
+
     public void writeSchedule(Boolean requiresBackup) {
         HashMap<Treatments, Integer> treatmentCount = new HashMap<Treatments, Integer>();
 
@@ -343,8 +394,14 @@ public class Schedule {
         }
         String scheduleString = String.format("Schedule for %s\n", LocalDate.now().plusDays(1));
         for (int i = 0; i < 24; i++) {
-            if (schedule[i][0] != null)
-                scheduleString += String.format("%d:00 - %d:00\n", i, i + 1);
+            if (schedule[i][0] != null) {
+                if (requiresBackup && backupSchedule[i][0] != null) {
+                    scheduleString += String.format("%d:00 - %d:00 [+ backup volunteer]\n", i, i + 1);
+
+                } else {
+                    scheduleString += String.format("%d:00 - %d:00\n", i, i + 1);
+                }
+            }
             for (int j = 0; j < 12; j++) {
                 if (schedule[i][j] != null && treatmentCount.get(schedule[i][j]) == 1) {
                     if (schedule[i][j].getDescription().equals("Feeding")) {
@@ -373,6 +430,9 @@ public class Schedule {
                         scheduleString += String.format("%s (%s)\n", schedule[i][j].getDescription(),
                                 getAnimalFromTreatment(schedule[i][j]).getNickname());
                     }
+                    if (requiresBackup && backupSchedule[i][0] != null) {
+                        scheduleString = writeBackup(i, scheduleString);
+                    }
                 }
                 if (j < 12 && schedule[i][j] != null) {
                     treatmentCount.put(schedule[i][j], treatmentCount.get(schedule[i][j]) - 1);
@@ -380,7 +440,17 @@ public class Schedule {
 
             }
         }
-        System.out.println(scheduleString);
+
+        try {
+            File file = new File("filename.txt");
+            FileWriter writer = new FileWriter(file);
+            writer.write(scheduleString);
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
 
     }
 
@@ -389,7 +459,7 @@ public class Schedule {
         String user = args[0];
         String password = args[1];
         // Boolean isFirst = Boolean.parseBoolean(args[2]);
-        Boolean isFirst = true;
+        Boolean isFirst = false;
         Connection dbConnection;
         Statement dbStatement;
         ResultSet dbResults;
@@ -428,23 +498,8 @@ public class Schedule {
         }
         Schedule taskSchedule = new Schedule(animals, treatments);
         taskSchedule.createSchedule();
-        Treatments[][] schedule = taskSchedule.getSchedule();
         ArrayList<Integer> backupHours = taskSchedule.getBackupHours();
 
-        for (int i = 0; i < 24; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (schedule[i][j] != null) {
-                    System.out.println(String.format(
-                            "{HOUR: %d animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d},",
-                            i,
-                            schedule[i][j].getAnimalID(), schedule[i][j].getStartHour(),
-                            schedule[i][j].getDescription(), schedule[i][j].getDuration(),
-                            schedule[i][j].getMaxWindow(), schedule[i][j].getSetupTime()));
-                } else {
-                    System.out.println("null,");
-                }
-            }
-        }
         if (isFirst && backupHours.size() == 0) {
             taskSchedule.writeSchedule(false);
             String[] returnArray = new String[] { "true" };
@@ -452,7 +507,7 @@ public class Schedule {
         }
 
         if (!isFirst && backupHours.size() > 0) {
-
+            taskSchedule.writeSchedule(true);
             String[] returnArray = new String[] { "true" };
             return returnArray;
         }
