@@ -115,7 +115,16 @@ public class Schedule {
         return null;
     }
 
-    private void addToBackupSchedule(Treatments treatment) throws IllegalArgumentException {
+    /*
+     * 
+     * Adds the given treatment to the backup schedule.
+     * 
+     * @param treatment The treatment to add to the backup schedule.
+     * 
+     * @throws ScheduleOverflowException if there is no available space in the
+     * backup schedule for the given treatment.
+     */
+    private void addToBackupSchedule(Treatments treatment) throws ScheduleOverflowException {
         for (int hour = 0; hour < 24; hour++) {
             for (int fiveMinBlock = 0; fiveMinBlock < 12; fiveMinBlock++) {
                 if (backupSchedule[hour][fiveMinBlock] == null
@@ -133,7 +142,7 @@ public class Schedule {
                 }
             }
         }
-        throw new IllegalArgumentException(
+        throw new ScheduleOverflowException(
                 String.format("animalID: %d, startHour: %d, description: %s could not fit into schedule.",
                         treatment.getAnimalID(), treatment.getStartHour(), treatment.getDescription()));
     }
@@ -145,7 +154,7 @@ public class Schedule {
      * 
      * @param treatment The treatment to add to the schedule.
      */
-    private void addToSchedule(Treatments treatment) {
+    private void addToSchedule(Treatments treatment) throws ScheduleOverflowException {
         // Iterates through each hour and five minute block in the schedule to find an
         // available time slot for the treatment.
         for (int hour = 0; hour < 24; hour++) {
@@ -243,7 +252,7 @@ public class Schedule {
         }
     }
 
-    private void handleTreatmentSetupTimes() {
+    private void handleTreatmentSetupTimes() throws ScheduleOverflowException {
         ArrayList<Treatments> treatments = getSortedTreatments();
         int coyoteCount = 0;
         int foxCount = 0;
@@ -331,7 +340,7 @@ public class Schedule {
         }
     }
 
-    public void createSchedule() {
+    public void createSchedule() throws ScheduleOverflowException {
         ArrayList<Treatments> sortedTreats = getSortedTreatments();
         Treatments holdKitFeeding = null;
         for (Treatments treatment : sortedTreats) {
@@ -500,7 +509,7 @@ public class Schedule {
 
     }
 
-    public static String[] main(String args[]) {
+    public static String[] main(String args[]) throws ScheduleOverflowException {
         String url = "jdbc:mysql://localhost:3306/EWR";
         String user = args[0];
         String password = args[1];
