@@ -342,15 +342,12 @@ public class Schedule {
             }
         }
         String scheduleString = String.format("Schedule for %s\n", LocalDate.now().plusDays(1));
-
         for (int i = 0; i < 24; i++) {
             if (schedule[i][0] != null)
                 scheduleString += String.format("%d:00 - %d:00\n", i, i + 1);
-            int j = 0;
-            while (j < 12) {
+            for (int j = 0; j < 12; j++) {
                 if (schedule[i][j] != null && treatmentCount.get(schedule[i][j]) == 1) {
-                    if (schedule[i][j].getDescription().equals("Feeding")
-                            || schedule[i][j].getDescription().equals("Clean Cage")) {
+                    if (schedule[i][j].getDescription().equals("Feeding")) {
                         Animal currAnimal = getAnimalFromTreatment(schedule[i][j]);
                         ArrayList<String> animalNames = new ArrayList<String>();
                         animalNames.add((getAnimalFromTreatment(schedule[i][j]).getNickname()));
@@ -361,18 +358,17 @@ public class Schedule {
                             animalNames.add((getAnimalFromTreatment(schedule[i][j]).getNickname()));
                             j++;
                         }
-                        Set<String> animalNamesSet = new HashSet<String>(animalNames);
                         String animalNamesString = "";
-                        Iterator<String> animalNamesIterator = animalNamesSet.iterator();
-                        while (animalNamesIterator.hasNext()) {
-                            animalNamesString += animalNamesIterator.next();
-                            if (animalNamesIterator.hasNext()) {
+                        for (int k = 0; k < animalNames.size(); k++) {
+                            animalNamesString += animalNames.get(k);
+                            if (k != animalNames.size() - 1) {
                                 animalNamesString += ", ";
                             }
+
                         }
                         scheduleString += String.format("%s - %s (%d: %s)\n", schedule[i][j - 1].getDescription(),
                                 getAnimalFromTreatment(schedule[i][j - 1]).getSpecies().name().toLowerCase(),
-                                animalNamesSet.size(), animalNamesString);
+                                animalNames.size(), animalNamesString);
                     } else {
                         scheduleString += String.format("%s (%s)\n", schedule[i][j].getDescription(),
                                 getAnimalFromTreatment(schedule[i][j]).getNickname());
@@ -381,7 +377,6 @@ public class Schedule {
                 if (j < 12 && schedule[i][j] != null) {
                     treatmentCount.put(schedule[i][j], treatmentCount.get(schedule[i][j]) - 1);
                 }
-                j++;
 
             }
         }
