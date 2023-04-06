@@ -8,6 +8,7 @@ package edu.ucalgary.oop;
 
 import java.sql.*;
 import java.util.*;
+import java.time.*;
 
 public class Schedule {
     private ArrayList<Animal> animalsArray;
@@ -90,6 +91,15 @@ public class Schedule {
         Collections.sort(treatments, maxWindowCompare);
 
         return treatments;
+    }
+
+    private Animal getAnimalFromTreatment(Treatments treat) {
+        for (Animal animal : getAnimalsArray()) {
+            if (animal.getAnimalTreatments().contains(treat)) {
+                return animal;
+            }
+        }
+        return null;
     }
 
     private void addToBackupSchedule(Treatments treatment) throws IllegalArgumentException {
@@ -317,11 +327,74 @@ public class Schedule {
         return backupSchedule;
     }
 
+    public void writeSchedule(Boolean requiresBackup) {
+        HashMap<Treatments, Integer> treatmentCount = new HashMap<Treatments, Integer>();
+
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < 12; j++) {
+                if (schedule[i][j] != null) {
+                    if (treatmentCount.containsKey(schedule[i][j])) {
+                        treatmentCount.put(schedule[i][j], treatmentCount.get(schedule[i][j]) + 1);
+                    } else {
+                        treatmentCount.put(schedule[i][j], 1);
+                    }
+                }
+            }
+        }
+        String scheduleString = String.format("Schedule for %s\n", LocalDate.now().plusDays(1));
+
+        for (int i = 0; i < 24; i++) {
+            if (schedule[i][0] != null)
+                scheduleString += String.format("%d:00 - %d:00\n", i, i + 1);
+            int j = 0;
+            while (j < 12) {
+                if (schedule[i][j] != null && treatmentCount.get(schedule[i][j]) == 1) {
+                    if (schedule[i][j].getDescription().equals("Feeding")
+                            || schedule[i][j].getDescription().equals("Clean Cage")) {
+                        Animal currAnimal = getAnimalFromTreatment(schedule[i][j]);
+                        ArrayList<String> animalNames = new ArrayList<String>();
+                        animalNames.add((getAnimalFromTreatment(schedule[i][j]).getNickname()));
+                        j++;
+                        while (j < 12 && schedule[i][j] != null
+                                && currAnimal.getSpecies() == (getAnimalFromTreatment(
+                                        schedule[i][j]).getSpecies())) {
+                            animalNames.add((getAnimalFromTreatment(schedule[i][j]).getNickname()));
+                            j++;
+                        }
+                        Set<String> animalNamesSet = new HashSet<String>(animalNames);
+                        String animalNamesString = "";
+                        Iterator<String> animalNamesIterator = animalNamesSet.iterator();
+                        while (animalNamesIterator.hasNext()) {
+                            animalNamesString += animalNamesIterator.next();
+                            if (animalNamesIterator.hasNext()) {
+                                animalNamesString += ", ";
+                            }
+                        }
+                        scheduleString += String.format("%s - %s (%d: %s)\n", schedule[i][j - 1].getDescription(),
+                                getAnimalFromTreatment(schedule[i][j - 1]).getSpecies().name().toLowerCase(),
+                                animalNamesSet.size(), animalNamesString);
+                    } else {
+                        scheduleString += String.format("%s (%s)\n", schedule[i][j].getDescription(),
+                                getAnimalFromTreatment(schedule[i][j]).getNickname());
+                    }
+                }
+                if (j < 12 && schedule[i][j] != null) {
+                    treatmentCount.put(schedule[i][j], treatmentCount.get(schedule[i][j]) - 1);
+                }
+                j++;
+
+            }
+        }
+        System.out.println(scheduleString);
+
+    }
+
     public static String[] main(String args[]) {
         String url = "jdbc:mysql://localhost:3306/EWR";
         String user = args[0];
         String password = args[1];
-        Boolean isFirst = Boolean.parseBoolean(args[2]);
+        // Boolean isFirst = Boolean.parseBoolean(args[2]);
+        Boolean isFirst = true;
         Connection dbConnection;
         Statement dbStatement;
         ResultSet dbResults;
@@ -367,18 +440,18 @@ public class Schedule {
             for (int j = 0; j < 12; j++) {
                 if (schedule[i][j] != null) {
                     System.out.println(String.format(
-                            "HOUR: %d animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d",
+                            "{HOUR: %d animalID: %d, startHour: %d, desc: %s, duration: %d, maxWindow: %d, setupTime: %d},",
                             i,
                             schedule[i][j].getAnimalID(), schedule[i][j].getStartHour(),
                             schedule[i][j].getDescription(), schedule[i][j].getDuration(),
                             schedule[i][j].getMaxWindow(), schedule[i][j].getSetupTime()));
                 } else {
-                    System.out.println("null");
+                    System.out.println("null,");
                 }
             }
         }
         if (isFirst && backupHours.size() == 0) {
-
+            taskSchedule.writeSchedule(false);
             String[] returnArray = new String[] { "true" };
             return returnArray;
         }
