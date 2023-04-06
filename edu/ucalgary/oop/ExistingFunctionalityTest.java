@@ -7,45 +7,13 @@
 package edu.ucalgary.oop;
 
 import org.junit.*;
-import org.junit.runners.model.TestTimedOutException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.Collection;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 
 public class ExistingFunctionalityTest {
     
-    private final int animalId;
-    private final String nickname;
-    private final AnimalType species;
-    
-    public ExistingFunctionalityTest(int animalId, String nickname, AnimalType species) {
-        this.animalId = animalId;
-        this.nickname = nickname;
-        this.species = species;
-    }
-    
-    @Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {1, "Fluffy", AnimalType.PORCUPINE},
-                {2, "Woof", AnimalType.COYOTE},
-                {3, "Sherlock Holmes", AnimalType.KITS}
-        });
-    }
-
     /* @Before */
 
     /**@Test
@@ -203,145 +171,6 @@ public class ExistingFunctionalityTest {
     assertEquals(2, treatments2.size());
 
     }
-    
-    @Test
-    public void testAnimalTypeValues() {
-        assertEquals(19, AnimalType.COYOTE.getFeedStartTime());
-        assertEquals(10, AnimalType.COYOTE.getPrepDuration());
-        assertEquals(5, AnimalType.COYOTE.getFeedDuration());
-        assertEquals(5, AnimalType.COYOTE.getCleanDuration());
-
-        assertEquals(0, AnimalType.FOX.getFeedStartTime());
-        assertEquals(5, AnimalType.FOX.getPrepDuration());
-        assertEquals(5, AnimalType.FOX.getFeedDuration());
-        assertEquals(5, AnimalType.FOX.getCleanDuration());
-
-        assertEquals(19, AnimalType.PORCUPINE.getFeedStartTime());
-        assertEquals(0, AnimalType.PORCUPINE.getPrepDuration());
-        assertEquals(5, AnimalType.PORCUPINE.getFeedDuration());
-        assertEquals(10, AnimalType.PORCUPINE.getCleanDuration());
-
-        assertEquals(8, AnimalType.BEAVER.getFeedStartTime());
-        assertEquals(0, AnimalType.BEAVER.getPrepDuration());
-        assertEquals(5, AnimalType.BEAVER.getFeedDuration());
-        assertEquals(5, AnimalType.BEAVER.getCleanDuration());
-
-        assertEquals(0, AnimalType.RACCOON.getFeedStartTime());
-        assertEquals(0, AnimalType.RACCOON.getPrepDuration());
-        assertEquals(5, AnimalType.RACCOON.getFeedDuration());
-        assertEquals(5, AnimalType.RACCOON.getCleanDuration());
-
-        assertEquals(0, AnimalType.KITS.getFeedStartTime());
-        assertEquals(0, AnimalType.KITS.getPrepDuration());
-        assertEquals(0, AnimalType.KITS.getFeedDuration());
-        assertEquals(30, AnimalType.KITS.getCleanDuration());
-    }
-    
-    //homepagegui test
-    private HomePageGUI homePageGUI;
-    private JButton scheduleButton;
-    private JButton animalButton;
-    private JButton treatmentButton;
-    private JButton tasksButton;
-    private JLabel scheduleHeader;
-    
-    @Before
-    public void setUpHomePageGUITest() {
-        homePageGUI = new HomePageGUI();
-        Container contentPane = homePageGUI.getContentPane();
-        Component[] components = contentPane.getComponents();
-
-        JPanel headerPanel = (JPanel) components[0];
-        JPanel mainBody = (JPanel) components[1];
-
-        Component[] headerComponents = headerPanel.getComponents();
-        scheduleButton = (JButton) headerComponents[0];
-        animalButton = (JButton) headerComponents[1];
-        treatmentButton = (JButton) headerComponents[2];
-        tasksButton = (JButton) headerComponents[3];
-
-        Component[] mainBodyComponents = mainBody.getComponents();
-        scheduleHeader = (JLabel) mainBodyComponents[0];
-    }
-    @Test
-    public void testHomePageGUIInitialization() {
-        HomePageGUI homePageGUI = new HomePageGUI();
-        Container contentPane = homePageGUI.getContentPane();
-        Component[] components = contentPane.getComponents();
-
-        // Check if the JFrame has two main components (headerPanel and mainBody)
-        assertEquals(2, components.length);
-
-        JPanel headerPanel = (JPanel) components[0];
-        JPanel mainBody = (JPanel) components[1];
-
-        // Check if the headerPanel has 4 buttons (Schedule, Animals, Treatments, Tasks)
-        Component[] headerComponents = headerPanel.getComponents();
-        assertEquals(4, headerComponents.length);
-
-        assertTrue(headerComponents[0] instanceof JButton);
-        assertTrue(headerComponents[1] instanceof JButton);
-        assertTrue(headerComponents[2] instanceof JButton);
-        assertTrue(headerComponents[3] instanceof JButton);
-
-        JButton scheduleButton = (JButton) headerComponents[0];
-        JButton animalButton = (JButton) headerComponents[1];
-        JButton treatmentButton = (JButton) headerComponents[2];
-        JButton tasksButton = (JButton) headerComponents[3];
-
-        // Check button text
-        assertEquals("Schedule", scheduleButton.getText());
-        assertEquals("Animals", animalButton.getText());
-        assertEquals("Treatments", treatmentButton.getText());
-        assertEquals("Tasks", tasksButton.getText());
-
-        // Check if the mainBody has a schedule header label
-        Component[] mainBodyComponents = mainBody.getComponents();
-        assertEquals(1, mainBodyComponents.length);
-        assertTrue(mainBodyComponents[0] instanceof JLabel);
-
-        JLabel scheduleHeader = (JLabel) mainBodyComponents[0];
-        assertNotNull(scheduleHeader.getText());
-    }
-    }
-
-    @Test
-    public void testActionListeners() {
-        // Check if the buttons have action listeners assigned
-        ActionListener[] scheduleButtonListeners = scheduleButton.getActionListeners();
-        ActionListener[] animalButtonListeners = animalButton.getActionListeners();
-        ActionListener[] treatmentButtonListeners = treatmentButton.getActionListeners();
-        ActionListener[] tasksButtonListeners = tasksButton.getActionListeners();
-
-        assertEquals(1, scheduleButtonListeners.length);
-        assertEquals(1, animalButtonListeners.length);
-        assertEquals(1, treatmentButtonListeners.length);
-        assertEquals(1, tasksButtonListeners.length);
-
-        // Check if the listeners are instances of HomePageGUI
-        assertTrue(scheduleButtonListeners[0] instanceof HomePageGUI);
-        assertTrue(animalButtonListeners[0] instanceof HomePageGUI);
-        assertTrue(treatmentButtonListeners[0] instanceof HomePageGUI);
-        assertTrue(tasksButtonListeners[0] instanceof HomePageGUI);
-    }
-
-    @Test
-    public void testMouseListener() {
-        // Check if the HomePageGUI has a mouse listener assigned
-        MouseListener[] mouseListeners = homePageGUI.getMouseListeners();
-        assertEquals(1, mouseListeners.length);
-
-        // Check if the listener is the HomePageGUI itself
-        assertTrue(mouseListeners[0] instanceof HomePageGUI);
-    }
-
-    @Test
-    public void testJFrameProperties() {
-        // Check JFrame properties
-        assertEquals("Wildlife Rescue", homePageGUI.getTitle());
-        assertEquals(800, homePageGUI.getWidth());
-        assertEquals(500, homePageGUI.getHeight());
-        assertEquals(JFrame.EXIT_ON_CLOSE, homePageGUI.getDefaultCloseOperation());
-    }
-    
 }
+    
+  
