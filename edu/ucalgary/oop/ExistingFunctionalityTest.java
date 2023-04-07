@@ -11,9 +11,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
  public class ExistingFunctionalityTest {
     
@@ -226,7 +223,10 @@ import java.time.LocalTime;
     }
 
     @Test
-    public void testGetSortedTreatmentsOneAnimalNoAddedTreatments() {
+    /*
+     * 
+     */
+    public void testGetSortedTreatmentsOneAnimalNoTreatments() {
         ArrayList<Animal> animalsArray = new ArrayList<>();
         animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
@@ -235,6 +235,9 @@ import java.time.LocalTime;
     }
 
     @Test
+    /*
+     * 
+     */
     public void testGetSortedTreatmentsOneAnimalOneTreatment() {
         ArrayList<Animal> animalsArray = new ArrayList<>();
         ArrayList<Treatments> testtreatments = new ArrayList<Treatments>();
@@ -247,11 +250,12 @@ import java.time.LocalTime;
         assertEquals(3, sortedTreatments.size());
     }
     
+   
     @Test
     /*
      * 
      */
-    public void testGetSortedTreatmentsManyTreatments() {
+    public void testGetSortedTreatmentsManyAnimalsManyTreatments() {
         // Create test data
         ArrayList<Animal> animalsArray = new ArrayList<>();
         ArrayList<Treatments> testTreatments = new ArrayList<>();
@@ -272,17 +276,70 @@ import java.time.LocalTime;
         for (int i = 0; i < testTreatments.size(); i++) { 
             Treatments exp = sortedTreatments.get(i);
             Treatments last = sortedTreatments.get(testTreatments.size()-1);
-            /*assertTrue(exp.getAnimalID() < last.getAnimalID());*/
+            assertTrue(exp.getAnimalID() <= last.getAnimalID()); 
             assertTrue(exp.getDuration() >= last.getDuration());
             assertTrue(exp.getSetupTime() >= last.getSetupTime());
-            /*assertTrue(exp.getStartHour() <= last.getStartHour());*/
+            assertTrue(exp.getStartHour() >= last.getStartHour()); /*CHECK, shouldn't starthour be arranged in ascending order? */
             assertTrue(exp.getMaxWindow() <= last.getMaxWindow());
 
         }
+
     
     }
     
+    @Test
+    /*
+     * 
+     */
+    public void testGetSortedTreatmentsSameAnimalTwiceManyTreatments() {
+        // Create test data
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        Animal rightanimal2 = new Animal(1, "Fluffy", "Porcupine");
+        animalsArray.add(rightanimal2);
+        animalsArray.add(rightanimal);
+        ArrayList<Treatments> testTreatments = new ArrayList<>();
+        Schedule schedule = new Schedule(animalsArray);
+        testTreatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
+        testTreatments.add(new Treatments(1, 10, "Feeding", 20, 2, 10));
+        testTreatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
+        testTreatments.add(new Treatments(1, 30, "Give Woof medicine", 5, 2));
+    
+        // Sort the treatments
+        ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
+        assertEquals(sortedTreatments.size(), testTreatments.size());
+        
+        for (int i = 0; i < testTreatments.size(); i++) { 
+            Treatments exp = sortedTreatments.get(i);
+            Treatments last = sortedTreatments.get(testTreatments.size()-1);
+            assertTrue(exp.getAnimalID() <= last.getAnimalID()); 
+            assertTrue(exp.getDuration() <= last.getDuration());
+            assertTrue(exp.getSetupTime() >= last.getSetupTime());
+            assertTrue(exp.getStartHour() >= last.getStartHour()); /*CHECK, shouldn't starthour be arranged in ascending order? */
+            assertTrue(exp.getMaxWindow() <= last.getMaxWindow());
+
+        }
+}
+    
+    @Test(expected = ScheduleOverflowException.class)
+    /*
+     * 
+     */
+    public void testCreateScheduleThrowsException() throws ScheduleOverflowException {
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        ArrayList<Treatments> manyTreatments = new ArrayList<>();
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        for (int i = 0; i < 15; i++) {
+            Treatments treatment =  new Treatments(1, 1, "Feeding", 5, 4, 0);
+            manyTreatments.add(treatment);
+            schedule.addTreatments(manyTreatments);
+        }
+        schedule.createSchedule();
+    }
+
 
 }
+
+
     
   
