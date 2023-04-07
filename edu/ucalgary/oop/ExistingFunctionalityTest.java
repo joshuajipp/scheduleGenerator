@@ -14,7 +14,13 @@ import java.util.ArrayList;
 
  public class ExistingFunctionalityTest {
     
-    /* @Before needed here for repeatedly created objects*/
+    private Animal rightanimal;
+
+    @Before
+    public void setup() {
+        rightanimal = new Animal(1, "Fluffy", "Porcupine");
+
+    }
 
     /**@Test
     public void shouldAnswerWithTrue()
@@ -26,8 +32,6 @@ import java.util.ArrayList;
      * Correct animal input test, animal has a one word name
      */
     public void testAnimalCorrectInputOneName() {
-        Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
-
         assertEquals(1, rightanimal.getID());
         assertEquals("Fluffy", rightanimal.getNickname());
         assertEquals(AnimalType.PORCUPINE, rightanimal.getSpecies());
@@ -39,7 +43,6 @@ import java.util.ArrayList;
      * Animal name is one word, species remains unchanged as specified and treatments arraylist updated with feeding and cage cleaning 
      */
     public void testAnimalElseConditionTreatments() {
-        Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
         ArrayList <Treatments> testtreatments = rightanimal.getAnimalTreatments();
         ArrayList <Treatments> exptreatments = new ArrayList<Treatments>();
         exptreatments.add(new Treatments(1, 19, "Feeding", 5,
@@ -94,12 +97,30 @@ import java.util.ArrayList;
     Animal wrongspecies = new Animal(1, "Hiss", "Basilisk");
     }
 
+      // Test constructor with invalid species
+      @Test(expected = IllegalArgumentException.class)
+      public void testAnimalConstructor_invalidSpecies() {
+          new Animal(1, "Fluffy", "Invalid Species");
+      }
+      
+    @Test
+    public void testAnimalConstructor_idZero() {
+        Animal animal = new Animal(0, "Fluffy", "Porcupine");
+        assertEquals(0, animal.getID());
+        assertEquals("Fluffy", animal.getNickname());
+        assertEquals(AnimalType.PORCUPINE, animal.getSpecies());
+      }
+      
+    @Test(expected = NullPointerException.class)
+    public void testAnimalConstructor_nullSpecies() {
+        new Animal(1, "Fluffy", null);
+        }
+      
     @Test 
     /*
      * Testing addTreatments method with correct input and matching ID that satisfies "if" expression 
     */
     public void testAddTreatments() {
-    Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     ArrayList<Treatments> exptreatments = new ArrayList<Treatments>();
     ArrayList<Treatments> testtreatments = new ArrayList<Treatments>();
     Treatments treatment1 = new Treatments(1, 19, "Feed Fluffy", 5, 3, 0);
@@ -127,7 +148,6 @@ import java.util.ArrayList;
      * 
     */
     public void testAddTreatmentsWithInvalidAnimalID() {
-    Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
     Treatments treatment1 = new Treatments(2, 19, "Walk Fluffy", 5, 3, 0);
     Treatments treatment2 = new Treatments(3, 0, "Play with Fluffy", 10, 24);
@@ -143,7 +163,6 @@ import java.util.ArrayList;
     * Test method addTreatments of the Animal class by adding more than 2, differing, treatments
     */
     public void testAddMultipleTreatments() {
-    Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
     treatments.add(new Treatments(1, 19, "Feed Fluffy", 5, 3, 0));
     treatments.add(new Treatments(1, 10, "Give Fluffy medicine", 5, 2, 5));
@@ -160,7 +179,6 @@ import java.util.ArrayList;
      * 
     */
     public void testAddTreatmentsForMultipleAnimals() {
-    Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     Animal animal2 = new Animal(2, "Woof", "Coyote");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
     treatments.add(new Treatments(1, 19, "Feeding Fluffy", 5, 3, 0));
@@ -178,6 +196,14 @@ import java.util.ArrayList;
 
     }
 
+    @Test
+    public void testAddTreatmentsToAnimalWithNoExistingTreatments() {
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        rightanimal.addTreatments(treatments);
+        assertEquals(2, rightanimal.getAnimalTreatments().size());
+
+
+    }
 
 
 
