@@ -1,22 +1,17 @@
 /**
 @author     Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
 @author     Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
-@version        1.2
+@version        1.5
 @since      1.0
 */
 package edu.ucalgary.oop;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
+import javax.swing.event.*;
+import javax.swing.table.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.*;
 
@@ -198,6 +193,7 @@ public class HomePageGUI extends JFrame {
  
     public JTable treatmentTable(){
         JTable table = new JTable(tableModel);
+        tableModel.addColumn("TreatmentID");
         tableModel.addColumn("AnimalID");
         tableModel.addColumn("TaskID");
         tableModel.addColumn("StartHour");
@@ -207,10 +203,11 @@ public class HomePageGUI extends JFrame {
             dbResults = dbStatement.executeQuery("SELECT * FROM TREATMENTS");
             while (dbResults.next()) {
                 // Add data to the table
-                Object[] rowData = new Object[3];
-                rowData[0] = dbResults.getInt("AnimalID");
-                rowData[1] = dbResults.getInt("TaskID");
-                rowData[2] = dbResults.getInt("StartHour");
+                Object[] rowData = new Object[4];
+                rowData[0] = dbResults.getInt("TreatmentID");
+                rowData[1] = dbResults.getInt("AnimalID");
+                rowData[2] = dbResults.getInt("TaskID");
+                rowData[3] = dbResults.getInt("StartHour");
 
                 tableModel.addRow(rowData);
             }
@@ -232,13 +229,15 @@ public class HomePageGUI extends JFrame {
                 try {
                     createConnection();
                     dbStatement = dbConnection.createStatement();
-                    String updateQuery = "UPDATE TREATMENTS SET " + model.getColumnName(column) + " = '" + data + "' WHERE AnimalID = " + model.getValueAt(row, 0);
+                    String updateQuery = "UPDATE TREATMENTS SET " + model.getColumnName(column) + " = '" + data + "' WHERE TreatmentID = " + model.getValueAt(row, 0);
                     dbStatement.executeUpdate(updateQuery);
                     close();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-                }
+                String [] arguments = {username,password,"true"};
+                HomePageGUI.main(arguments);
+            }
         });
         return table;
     }
