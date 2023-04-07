@@ -11,6 +11,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
  public class ExistingFunctionalityTest {
     
@@ -211,9 +214,74 @@ import java.util.ArrayList;
 
     }
 
+    @Test
+    /*
+     * 
+     */
+    public void testGetSortedTreatmentsEmptyAnimals() {
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        Schedule schedule = new Schedule(animalsArray);
+        ArrayList<Treatments> treatments = schedule.getSortedTreatments();
+        assertTrue(treatments.isEmpty());
+    }
 
+    @Test
+    public void testGetSortedTreatmentsOneAnimalNoAddedTreatments() {
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
+        assertTrue(sortedTreatments.size() == 2);
+    }
 
+    @Test
+    public void testGetSortedTreatmentsOneAnimalOneTreatment() {
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        ArrayList<Treatments> testtreatments = new ArrayList<Treatments>();
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        Treatments treatment1 = new Treatments(1, 19, "Feed Fluffy", 5, 3, 0);
+        testtreatments.add(treatment1);
+        schedule.addTreatments(testtreatments);
+        ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
+        assertEquals(3, sortedTreatments.size());
+    }
+    
+    @Test
+    /*
+     * 
+     */
+    public void testGetSortedTreatmentsManyTreatments() {
+        // Create test data
+        ArrayList<Animal> animalsArray = new ArrayList<>();
+        ArrayList<Treatments> testTreatments = new ArrayList<>();
+        Schedule schedule = new Schedule(animalsArray);
+        Animal animal2 = new Animal(2, "Woof", "Coyote");
 
+        animalsArray.add(animal2);
+        animalsArray.add(rightanimal);
+        testTreatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
+        testTreatments.add(new Treatments(2, 10, "Feeding", 20, 2, 10));
+        testTreatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
+        testTreatments.add(new Treatments(2, 30, "Give Woof medicine", 5, 2));
+    
+        // Sort the treatments
+        ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
+        assertEquals(sortedTreatments.size(), testTreatments.size());
+        
+        for (int i = 0; i < testTreatments.size(); i++) { 
+            Treatments exp = sortedTreatments.get(i);
+            Treatments last = sortedTreatments.get(testTreatments.size()-1);
+            /*assertTrue(exp.getAnimalID() < last.getAnimalID());*/
+            assertTrue(exp.getDuration() >= last.getDuration());
+            assertTrue(exp.getSetupTime() >= last.getSetupTime());
+            /*assertTrue(exp.getStartHour() <= last.getStartHour());*/
+            assertTrue(exp.getMaxWindow() <= last.getMaxWindow());
+
+        }
+    
+    }
+    
 
 }
     
