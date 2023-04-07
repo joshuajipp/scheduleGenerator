@@ -7,9 +7,11 @@
 package edu.ucalgary.oop;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.awt.*;
@@ -23,7 +25,7 @@ HomePageGUI is a class that extends JFrame and implements ActionListener, and Mo
 homepage for the wildlife rescue program that will show the schedules for the volunteers.
 */
 
-public class HomePageGUI extends JFrame implements ActionListener { 
+public class HomePageGUI extends JFrame { 
     private LocalDate date = LocalDate.now();
     private ArrayList<String> scheduleList = new ArrayList<String>();
     private Connection dbConnection;
@@ -32,6 +34,7 @@ public class HomePageGUI extends JFrame implements ActionListener {
     private String username;
     private String password;
     private JTable treatmentTable;
+    private DefaultTableModel tableModel = new DefaultTableModel();
     public HomePageGUI(){}
     /*
     HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
@@ -86,39 +89,43 @@ public class HomePageGUI extends JFrame implements ActionListener {
         
 
         JPanel treatmentPanel = new JPanel(new BorderLayout());
-        JTable treatmentTable  = treatmentTable();
+        this.treatmentTable  = treatmentTable();
         JScrollPane TreatmentScrollPane = new JScrollPane(treatmentTable);
         TreatmentScrollPane.setPreferredSize(new Dimension(800,300));
         treatmentPanel.add(TreatmentScrollPane);
-        JButton saveButton = new JButton("Save");
-        saveButton.setFont(new Font("Calibri", Font.PLAIN,30));
-        saveButton.addActionListener(this);
-        treatmentPanel.add(saveButton,BorderLayout.SOUTH);
+        //JButton saveButton = new JButton("Save");
+        //saveButton.setFont(new Font("Calibri", Font.PLAIN,30));
+        //saveButton.addActionListener(this);
+        //treatmentPanel.add(saveButton,BorderLayout.SOUTH);
 
         tabbedPane.add("Schedule", schedulePanel);
         tabbedPane.add("Animal", animalPanel);
         tabbedPane.add("Task", taskPanel);
         tabbedPane.add("Treatment", treatmentPanel);
     }
-    public void actionPerformed(ActionEvent event) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/EWR",username,password);
-             Statement stmt = conn.createStatement()) {
-             
-            // DefaultTableModel tableModel = (DefaultTableModel) treatmentTable.getModel();
-            // int rowCount = tableModel.getRowCount();
-            // for (int i = 0; i < rowCount; i++) {
-            //     int animalID = (int) tableModel.getValueAt(i, 0);
-            //     int taskID = (int) tableModel.getValueAt(i, 1);
-            //     String startHour = (String) tableModel.getValueAt(i, 2);
-            //     String updateQuery = "UPDATE TREATMENTS SET StartHour = '" + startHour
-            //             + "' WHERE AnimalID = " + animalID + " AND TaskID = " + taskID;
-            //     stmt.executeUpdate(updateQuery);
-            // }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
+    // public void actionPerformed(ActionEvent event) {
+    //     try {
+    //         createConnection();
+    //         dbStatement = dbConnection.createStatement();
+    //         System.out.println("treatmentTable: " + treatmentTable);
+
+    //         DefaultTableModel tableModel = (DefaultTableModel) treatmentTable.getModel();
+          
+
+    //         int rowCount = tableModel.getRowCount();
+    //         for (int i = 0; i < rowCount; i++) {
+    //             int animalID = (int) tableModel.getValueAt(i, 0);
+    //             int taskID = (int) tableModel.getValueAt(i, 1);
+    //             int startHour = (int) tableModel.getValueAt(i, 2);
+    //             String updateQuery = "UPDATE TREATMENTS SET StartHour = '" + startHour
+    //                     + "' WHERE AnimalID = " + animalID + " AND TaskID = " + taskID;
+    //             dbStatement.executeUpdate(updateQuery);
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+
 
     private void createConnection(){
         try{
@@ -190,11 +197,10 @@ public class HomePageGUI extends JFrame implements ActionListener {
     }
  
     public JTable treatmentTable(){
-        DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
-        tableModel.addColumn("Animal ID");
-        tableModel.addColumn("Task ID");
-        tableModel.addColumn("Start Hour");
+        tableModel.addColumn("AnimalID");
+        tableModel.addColumn("TaskID");
+        tableModel.addColumn("StartHour");
         try{
             createConnection();
             dbStatement = dbConnection.createStatement();
@@ -204,7 +210,7 @@ public class HomePageGUI extends JFrame implements ActionListener {
                 Object[] rowData = new Object[3];
                 rowData[0] = dbResults.getInt("AnimalID");
                 rowData[1] = dbResults.getInt("TaskID");
-                rowData[2] = dbResults.getString("StartHour");
+                rowData[2] = dbResults.getInt("StartHour");
 
                 tableModel.addRow(rowData);
             }
@@ -213,7 +219,27 @@ public class HomePageGUI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         table.setFillsViewportHeight(true);
-        this.treatmentTable = table;
+        tableModel.addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel) e.getSource();
+                Object data = model.getValueAt(row, column);
+
+                // Update the database with the new data
+                try {
+                    createConnection();
+                    dbStatement = dbConnection.createStatement();
+                    String updateQuery = "UPDATE TREATMENTS SET " + model.getColumnName(column) + " = '" + data + "' WHERE AnimalID = " + model.getValueAt(row, 0);
+                    dbStatement.executeUpdate(updateQuery);
+                    close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                }
+        });
         return table;
     }
  
@@ -286,7 +312,8 @@ public class HomePageGUI extends JFrame implements ActionListener {
             EventQueue.invokeLater(() -> {
                 new HomePageGUI(username, password).setVisible(true);        
             });
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            String message = "Unable to create a schedule. \n" + e.getMessage();
+            JOptionPane.showMessageDialog(null, message);
             }
     }   
 }
