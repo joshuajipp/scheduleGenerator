@@ -219,13 +219,13 @@ public class HomePageGUI extends JFrame implements ActionListener {
  
      public ArrayList<String> schedReadFile(){
         try{
-            File filename  = new File(date.plusDays(1) + ".txt");
+            File filename  = new File("filename.txt");
             Scanner schedReader = new Scanner(filename);
             while(schedReader.hasNextLine()){
                 String data = schedReader.nextLine();
                 scheduleList.add(data);
             }
-            schedReader.close();
+            schedReader.close(); 
             return scheduleList;
         }catch(FileNotFoundException e){
             System.out.println("An error occured.");
@@ -241,43 +241,52 @@ public class HomePageGUI extends JFrame implements ActionListener {
     public static void main(String[] args) { 
         String username = args[0];
         String password = args[1];
-   
-
-        //Schedule.main(args);
-        //String[] volunteerChecker = Schedule.main(args); 
-        String[] volunteerChecker = {"true","1 2"};
-        String boolCheck = volunteerChecker[0];
-        if (boolCheck.equals("true")){
-            HomePageGUI homePage = new HomePageGUI();
-            ArrayList<String> scheduleList = homePage.schedReadFile();
-            EventQueue.invokeLater(() -> {
-                new HomePageGUI(scheduleList,username,password).setVisible(true);        
-            });
+        for (Frame frame : JFrame.getFrames()) {
+            frame.dispose();
         }
-        if (boolCheck.equals("false")){
+        try{
+            String[] volunteerChecker = Schedule.main(args); 
+            String boolCheck = volunteerChecker[0];
+            if (boolCheck.equals("true")){
+                HomePageGUI homePage = new HomePageGUI();
+                ArrayList<String> scheduleList = homePage.schedReadFile();
+                EventQueue.invokeLater(() -> {
+                    JFrame.getFrames()[JFrame.getFrames().length - 1].dispose();
+                });
+                EventQueue.invokeLater(() -> {
+                    new HomePageGUI(scheduleList,username,password).setVisible(true);        
+                });
+            }
+            if (boolCheck.equals("false")){
+                EventQueue.invokeLater(() -> {
+                    new HomePageGUI(username, password).setVisible(true);        
+                });
+                String volunteerTime = volunteerChecker[1];
+                String[] arrOfVolunTime = volunteerTime.split(" ");
+                String message = "Vounteer is needed for the following times: \n";
+                for (String time : arrOfVolunTime){
+                    message += time + "\n";
+                }
+                JOptionPane optionPane = new JOptionPane();
+                optionPane.setMessage(message);
+                optionPane.setMessageType(JOptionPane.WARNING_MESSAGE);
+                Object[] option = {"Confirm"};
+                optionPane.setOptions(option);
+                JDialog dialog = optionPane.createDialog(null, "VOLUNTEER REQUIRED");
+                dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //disables the exit button
+                dialog.setVisible(true);
+                Object selectedValue = optionPane.getValue();
+                if(selectedValue.equals("Confirm")){
+                    String [] arguments = {username,password,"false"};
+                    //need to close previous eventqueue/GUI Frame
+                    HomePageGUI.main(arguments);
+                }   
+            }
+        }catch (ScheduleOverflowException e){
             EventQueue.invokeLater(() -> {
                 new HomePageGUI(username, password).setVisible(true);        
             });
-            String volunteerTime = volunteerChecker[1];
-            String[] arrOfVolunTime = volunteerTime.split(" ");
-            String message = "Vounteer is needed for the following times: \n";
-            for (String time : arrOfVolunTime){
-                message += time + "\n";
+            JOptionPane.showMessageDialog(null, e.getMessage());
             }
-            JOptionPane optionPane = new JOptionPane();
-            optionPane.setMessage(message);
-            optionPane.setMessageType(JOptionPane.WARNING_MESSAGE);
-            Object[] option = {"Confirm"};
-            optionPane.setOptions(option);
-            JDialog dialog = optionPane.createDialog(null, "VOLUNTEER REQUIRED");
-            dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //disables the exit button
-            dialog.setVisible(true);
-            Object selectedValue = optionPane.getValue();
-            if(selectedValue.equals("Confirm")){
-                String [] arguments = {username,password,"false"};
-                HomePageGUI.main(arguments);
-                
-            }   
-        }
-    }
+    }   
 }
