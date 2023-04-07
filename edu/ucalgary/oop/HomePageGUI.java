@@ -22,7 +22,7 @@ Will display the schedule to the GUI and will handle if volunteer is needed.
 */
 
 public class HomePageGUI extends JFrame { 
-    private LocalDate date = LocalDate.now();
+    private LocalDate tomorrow = LocalDate.now().plusDays(1);
     private ArrayList<String> scheduleList = new ArrayList<String>();
     private Connection dbConnection;
     private Statement dbStatement;
@@ -79,7 +79,7 @@ public class HomePageGUI extends JFrame {
 
         //creates the panel which contains components which will be added to the schedule tab
         JPanel schedulePanel = new JPanel(new BorderLayout());
-        JLabel scheduleLabel = new JLabel("Schedule for: " + date.plusDays(1));
+        JLabel scheduleLabel = new JLabel("Schedule for: " + tomorrow);
         schedulePanel.add(scheduleLabel,BorderLayout.NORTH);
         JList<String> scheduleJList = new JList<>(scheduleList.toArray(new String[0]));
         JScrollPane scrollPanel = new JScrollPane(scheduleJList);
@@ -269,7 +269,7 @@ public class HomePageGUI extends JFrame {
      */
     public ArrayList<String> schedReadFile(){
         try{
-            File filename  = new File("filename.txt");
+            File filename  = new File(String.format("%s.txt",tomorrow));
             Scanner schedReader = new Scanner(filename);
             while(schedReader.hasNextLine()){
                 String data = schedReader.nextLine();
