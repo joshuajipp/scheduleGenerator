@@ -16,8 +16,9 @@ import java.io.*;
 import java.util.*;
 
 /*
-HomePageGUI is a class that extends JFrame and implements ActionListener, and MouseListener. It displays the 
-homepage for the wildlife rescue program that will show the schedules for the volunteers.
+HomePageGUI class handles the homepage of the program.
+User will be able to interact with multiple tabs and make changes to the treatment table.
+Will display the schedule to the GUI and will handle if volunteer is needed.
 */
 
 public class HomePageGUI extends JFrame { 
