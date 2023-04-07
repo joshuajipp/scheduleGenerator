@@ -22,11 +22,6 @@ import java.util.ArrayList;
 
     }
 
-    /**@Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }*/
     @Test 
      /*
      * Correct animal input test, animal has a one word name
@@ -97,13 +92,19 @@ import java.util.ArrayList;
     Animal wrongspecies = new Animal(1, "Hiss", "Basilisk");
     }
 
-      // Test constructor with invalid species
-      @Test(expected = IllegalArgumentException.class)
-      public void testAnimalConstructor_invalidSpecies() {
-          new Animal(1, "Fluffy", "Invalid Species");
-      }
+    // Test constructor with invalid species
+    @Test(expected = IllegalArgumentException.class)
+    /*
+     * 
+     */
+    public void testAnimalConstructor_invalidSpecies() {
+        new Animal(1, "Fluffy", "Invalid Species");
+    }
       
     @Test
+    /*
+     * 
+     */
     public void testAnimalConstructor_idZero() {
         Animal animal = new Animal(0, "Fluffy", "Porcupine");
         assertEquals(0, animal.getID());
@@ -112,6 +113,9 @@ import java.util.ArrayList;
       }
       
     @Test(expected = NullPointerException.class)
+    /*
+     * 
+     */
     public void testAnimalConstructor_nullSpecies() {
         new Animal(1, "Fluffy", null);
         }
@@ -131,11 +135,11 @@ import java.util.ArrayList;
     for (int i = 0; i < testtreatments.size(); i++) {
         Treatments test = testtreatments.get(i);
         Treatments exp = exptreatments.get(i);
-        assertEquals(exp.getAnimalID(), test.getAnimalID()); /* Test case runs */
-        assertEquals(exp.getStartHour(), test.getStartHour()); /* Test case runs */
-        assertEquals(exp.getDescription(), test.getDescription()); /* Test case runs */
-        assertEquals(exp.getDuration(), test.getDuration()); /* Test case runs */
-        assertEquals(exp.getMaxWindow(), test.getMaxWindow()); /* Test case runs */
+        assertEquals(exp.getAnimalID(), test.getAnimalID()); 
+        assertEquals(exp.getStartHour(), test.getStartHour()); 
+        assertEquals(exp.getDescription(), test.getDescription()); 
+        assertEquals(exp.getDuration(), test.getDuration()); 
+        assertEquals(exp.getMaxWindow(), test.getMaxWindow()); 
         if (i==1) {
             assertEquals(exp.getSetupTime(), test.getSetupTime());
             }
@@ -197,11 +201,13 @@ import java.util.ArrayList;
     }
 
     @Test
+    /*
+     * 
+     */
     public void testAddTreatmentsToAnimalWithNoExistingTreatments() {
         ArrayList<Treatments> treatments = new ArrayList<>();
         rightanimal.addTreatments(treatments);
         assertEquals(2, rightanimal.getAnimalTreatments().size());
-
 
     }
 
