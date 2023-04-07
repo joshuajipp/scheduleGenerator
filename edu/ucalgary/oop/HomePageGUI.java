@@ -30,10 +30,15 @@ public class HomePageGUI extends JFrame {
     private String password;
     private JTable treatmentTable;
     private DefaultTableModel tableModel = new DefaultTableModel();
+    
+    /*Constructor */
     public HomePageGUI(){}
+    
     /*
-    HomePageGUI constructor sets up the Graphical User Interface by creating the window for the GUI by initializing its size
-    and the title. It also calls setupGUI() to add buttons or text in the page.
+     * Constructor 
+     * Sets up the frame with a title and the size. It also sets a default behaviour when closed.
+     * @param username. Passed from WildlifeRescue, which is the login page.
+     *  @param password. Passed from WildlifeRescue, which is the login page.
      */
     public HomePageGUI(String username,String password){
         super("Wildlife Rescue"); //call to JFrame constructor with title arguement
@@ -43,6 +48,14 @@ public class HomePageGUI extends JFrame {
         setSize(800,500); //sets the size of the JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //set default close operation
     }
+
+    /*
+     * Constructor
+     * Sets up the frame with a title and the size. It also sets a default behaviour when closed.
+     * @param arraylist of scheduleList. Contains schele read from the text file
+     * @param username. Passed from WildlifeRescue, which is the login page.
+     * @param password. Passed from WildlifeRescue, which is the login page.
+     */
     public HomePageGUI(ArrayList<String> scheduleList,String username, String password){
         super("Wildlife Rescue"); //call to JFrame constructor with title arguement
         this.scheduleList = scheduleList;
@@ -54,14 +67,16 @@ public class HomePageGUI extends JFrame {
     }
 
     /*
-    This constructor sets up the GUI by creating and configurating the Schedule, Animals, Treatments and Tasks buttons, as well as 
-    the schedule header lable which shows the date of which the schedule is being made for.
+     * Called by the constructor 
+     * Creates a tabbed Panel and adds necessary components within each tab. 
      */
     public void setupGUI(){
+        //initializes the tabs to the Frame 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
         this.add(tabbedPane);
 
+        //creates the panel which contains components which will be added to the schedule tab
         JPanel schedulePanel = new JPanel(new BorderLayout());
         JLabel scheduleLabel = new JLabel("Schedule for: " + date.plusDays(1));
         schedulePanel.add(scheduleLabel,BorderLayout.NORTH);
@@ -69,59 +84,39 @@ public class HomePageGUI extends JFrame {
         JScrollPane scrollPanel = new JScrollPane(scheduleJList);
         scrollPanel.setPreferredSize(new Dimension(800,300));
         schedulePanel.add(scrollPanel,BorderLayout.CENTER);
-      
+        
+        //creates the panel which contains components which will be added to the animal tab
         JPanel animalPanel = new JPanel(new BorderLayout());
         JTable animalTable  = animalTable();
         JScrollPane animalScrollPane = new JScrollPane(animalTable);
         animalScrollPane.setPreferredSize(new Dimension(800,300));
         animalPanel.add(animalScrollPane);
 
+        //creates the panel which contains components which will be added to the task tab
         JPanel taskPanel = new JPanel(new BorderLayout());
         JTable taskTable  = taskTable();
         JScrollPane taskScrollPane = new JScrollPane(taskTable);
         taskScrollPane.setPreferredSize(new Dimension(800,300));
         taskPanel.add(taskScrollPane);
-        
 
+        //creates the panel which contains components which will be added to the treatment tab
         JPanel treatmentPanel = new JPanel(new BorderLayout());
         this.treatmentTable  = treatmentTable();
         JScrollPane TreatmentScrollPane = new JScrollPane(treatmentTable);
         TreatmentScrollPane.setPreferredSize(new Dimension(800,300));
         treatmentPanel.add(TreatmentScrollPane);
-        //JButton saveButton = new JButton("Save");
-        //saveButton.setFont(new Font("Calibri", Font.PLAIN,30));
-        //saveButton.addActionListener(this);
-        //treatmentPanel.add(saveButton,BorderLayout.SOUTH);
-
+   
+        //adds the panel made to each tab
         tabbedPane.add("Schedule", schedulePanel);
         tabbedPane.add("Animal", animalPanel);
         tabbedPane.add("Task", taskPanel);
         tabbedPane.add("Treatment", treatmentPanel);
     }
-    // public void actionPerformed(ActionEvent event) {
-    //     try {
-    //         createConnection();
-    //         dbStatement = dbConnection.createStatement();
-    //         System.out.println("treatmentTable: " + treatmentTable);
 
-    //         DefaultTableModel tableModel = (DefaultTableModel) treatmentTable.getModel();
-          
-
-    //         int rowCount = tableModel.getRowCount();
-    //         for (int i = 0; i < rowCount; i++) {
-    //             int animalID = (int) tableModel.getValueAt(i, 0);
-    //             int taskID = (int) tableModel.getValueAt(i, 1);
-    //             int startHour = (int) tableModel.getValueAt(i, 2);
-    //             String updateQuery = "UPDATE TREATMENTS SET StartHour = '" + startHour
-    //                     + "' WHERE AnimalID = " + animalID + " AND TaskID = " + taskID;
-    //             dbStatement.executeUpdate(updateQuery);
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-
+    /*
+     * Helper method
+     * Creates the connection to the database
+     */
     private void createConnection(){
         try{
             dbConnection = DriverManager.getConnection(
@@ -130,6 +125,11 @@ public class HomePageGUI extends JFrame {
             e.printStackTrace();
         }
     }
+
+    /*
+     * Helper method
+     * Closes the connection to the database
+     */
     public void close(){
         try{
             dbResults.close();
@@ -138,6 +138,11 @@ public class HomePageGUI extends JFrame {
             e.printStackTrace();
         }
     }
+
+    /*
+     * Creates a table and fills each row with data from animal query
+     * @returns created animal table shown in the animal tab
+     */
     public JTable animalTable(){
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
@@ -163,6 +168,11 @@ public class HomePageGUI extends JFrame {
         table.setFillsViewportHeight(true);
         return table;
     }
+
+    /*
+     * Creates a table and fills each row with data from task query
+     * @returns created task table shown in the task tab
+     */
     public JTable taskTable(){
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
@@ -190,7 +200,11 @@ public class HomePageGUI extends JFrame {
         table.setFillsViewportHeight(true);
         return table;
     }
- 
+    
+    /*
+     * Creates a table and fills each row with data from treament query
+     * @returns created treatment table shown in the treatment tab
+     */
     public JTable treatmentTable(){
         JTable table = new JTable(tableModel);
         tableModel.addColumn("TreatmentID");
@@ -218,6 +232,11 @@ public class HomePageGUI extends JFrame {
         table.setFillsViewportHeight(true);
         tableModel.addTableModelListener(new TableModelListener() {
 
+            /*
+             * Connects to the database and update the database based on changes made to the table in the Frame.
+             * Reloads with every change to attempt to create a schedule
+             * @param e. event or changes to the table
+             */
             @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
@@ -241,8 +260,13 @@ public class HomePageGUI extends JFrame {
         });
         return table;
     }
- 
-     public ArrayList<String> schedReadFile(){
+    
+    /*
+     * Helper Method
+     * Looks for the file containing the schedule. It reads from the file and stores the data to scheduleList.
+     * @return arraylist of scheduleList containing the schedule read from the file
+     */
+    public ArrayList<String> schedReadFile(){
         try{
             File filename  = new File("filename.txt");
             Scanner schedReader = new Scanner(filename);
@@ -255,44 +279,45 @@ public class HomePageGUI extends JFrame {
         }catch(FileNotFoundException e){
             System.out.println("An error occured.");
             e.printStackTrace();
-        }return null;
-        
+        }
+        return null; 
     }
+
     /*
-    Invokes the GUI. Calls the HomePageGUI() constructor to create and configure the JFrame and this main method sets the visibility
-    to true.
-    @param args Optional command-line argument
+     * Calls main of Schedule class and passes the argument. 
+     * Depending on the return array of the Schedule class, it involkes Frame accordingly.
+     * @param Array of string arguments. Passed by WildlifeRescue
+     * 
      */
     public static void main(String[] args) { 
         String username = args[0];
         String password = args[1];
+        
+        //closes or disposes any opened Frame
         for (Frame frame : JFrame.getFrames()) {
             frame.dispose();
         }
         try{
-            String[] volunteerChecker = Schedule.main(args); 
-            String boolCheck = volunteerChecker[0];
+            String[] volunteerChecker = Schedule.main(args);  //calls to main and store the return as an array of string 
+            String boolCheck = volunteerChecker[0]; //stores the String at index one to boolCheck
             if (boolCheck.equals("true")){
                 HomePageGUI homePage = new HomePageGUI();
-                ArrayList<String> scheduleList = homePage.schedReadFile();
+                ArrayList<String> scheduleList = homePage.schedReadFile(); //if boolCheck = 'true, read schedule from the textfile created by schedule class
                 EventQueue.invokeLater(() -> {
-                    JFrame.getFrames()[JFrame.getFrames().length - 1].dispose();
-                });
-                EventQueue.invokeLater(() -> {
-                    new HomePageGUI(scheduleList,username,password).setVisible(true);        
+                    new HomePageGUI(scheduleList,username,password).setVisible(true);       //involkes to display Frame containing schedule
                 });
             }
             if (boolCheck.equals("false")){
                 EventQueue.invokeLater(() -> {
-                    new HomePageGUI(username, password).setVisible(true);        
+                    new HomePageGUI(username, password).setVisible(true);        //if boolCheck = 'false', involkes to display Frame but schedule tab is empty.
                 });
-                String volunteerTime = volunteerChecker[1];
+                String volunteerTime = volunteerChecker[1];                        
                 String[] arrOfVolunTime = volunteerTime.split(" ");
                 String message = "Vounteer is needed for the following times: \n";
                 for (String time : arrOfVolunTime){
                     message += time + "\n";
                 }
-                JOptionPane optionPane = new JOptionPane();
+                JOptionPane optionPane = new JOptionPane();       //creates a custom window that will pop up with a message
                 optionPane.setMessage(message);
                 optionPane.setMessageType(JOptionPane.WARNING_MESSAGE);
                 Object[] option = {"Confirm"};
@@ -301,17 +326,17 @@ public class HomePageGUI extends JFrame {
                 dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //disables the exit button
                 dialog.setVisible(true);
                 Object selectedValue = optionPane.getValue();
-                if(selectedValue.equals("Confirm")){
+                if(selectedValue.equals("Confirm")){           //handles onClick of confirm button
                     String [] arguments = {username,password,"false"};
                     //need to close previous eventqueue/GUI Frame
-                    HomePageGUI.main(arguments);
+                    HomePageGUI.main(arguments); //calls main again with different argument
                 }   
             }
         }catch (ScheduleOverflowException e){
             EventQueue.invokeLater(() -> {
-                new HomePageGUI(username, password).setVisible(true);        
+                new HomePageGUI(username, password).setVisible(true);        //if unable to create a schedule at all, involkes a Frame with empty schedule tab
             });
-            String message = "Unable to create a schedule. \n" + e.getMessage();
+            String message = "Unable to create a schedule. \n" + e.getMessage(); //creates a pop up window with message 
             JOptionPane.showMessageDialog(null, message);
             }
     }   
