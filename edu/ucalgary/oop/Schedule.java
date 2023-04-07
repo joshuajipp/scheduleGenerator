@@ -538,12 +538,12 @@ public class Schedule {
      * 
      * @throws IOException if there is an error writing the schedule to the file
      */
-    public void writeSchedule(Boolean requiresBackup) {
+    public void writeSchedule() {
         HashMap<Treatments, Integer> treatmentCount = countDuplicateTreatments();
-        String scheduleString = String.format("Schedule for %s\n", LocalDate.now().plusDays(1));
+        String scheduleString = "";
         for (int i = 0; i < 24; i++) {
             if (schedule[i][0] != null) {
-                if (requiresBackup && backupSchedule[i][0] != null) {
+                if (backupSchedule[i][0] != null) {
                     scheduleString += String.format("%d:00 - %d:00 [+ backup volunteer]\n", i, i + 1);
 
                 } else {
@@ -578,7 +578,7 @@ public class Schedule {
                         scheduleString += String.format("%s (%s)\n", schedule[i][j].getDescription(),
                                 getAnimalFromTreatment(schedule[i][j]).getNickname());
                     }
-                    if (requiresBackup && backupSchedule[i][0] != null) {
+                    if (backupSchedule[i][0] != null) {
                         scheduleString = writeBackup(i, scheduleString);
                     }
                 }
@@ -598,9 +598,10 @@ public class Schedule {
      */
 
     private void writeScheduleTxt(String scheduleString) {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         try {
-            File file = new File("filename.txt");
-            FileWriter writer = new FileWriter(file);
+            File file = new File(String.format("%s.txt", tomorrow));
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
             writer.write(scheduleString);
             writer.close();
 
@@ -673,15 +674,15 @@ public class Schedule {
         Schedule taskSchedule = new Schedule(animals, treatments);
         taskSchedule.createSchedule();
         ArrayList<Integer> backupHours = taskSchedule.getBackupHours();
-
+        System.out.println(isFirst);
         if (isFirst && backupHours.size() == 0) {
-            taskSchedule.writeSchedule(false);
+            taskSchedule.writeSchedule();
             String[] returnArray = new String[] { "true" };
             return returnArray;
         }
 
         if (!isFirst && backupHours.size() > 0) {
-            taskSchedule.writeSchedule(true);
+            taskSchedule.writeSchedule();
             String[] returnArray = new String[] { "true" };
             return returnArray;
         }
