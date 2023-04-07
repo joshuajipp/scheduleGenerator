@@ -1,7 +1,7 @@
 /**
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
-@version    	1.1
+@version    	1.2
 @since  	1.0
 */
 package edu.ucalgary.oop;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
  public class ExistingFunctionalityTest {
     
-    /* @Before */
+    /* @Before needed here for repeatedly created objects*/
 
     /**@Test
     public void shouldAnswerWithTrue()
@@ -42,9 +42,9 @@ import java.util.ArrayList;
         Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
         ArrayList <Treatments> testtreatments = rightanimal.getAnimalTreatments();
         ArrayList <Treatments> exptreatments = new ArrayList<Treatments>();
-        exptreatments.add(new Treatments(1, 19, "Feed Fluffy", 5,
+        exptreatments.add(new Treatments(1, 19, "Feeding", 5,
         3, 0));
-        exptreatments.add(new Treatments(1, 0, "Clean cage for Fluffy", 10, 24));
+        exptreatments.add(new Treatments(1, 0, "Clean porcupine Cage", 10, 24));
 
         for (int i = 0; i < testtreatments.size(); i++) {
             Treatments test = testtreatments.get(i);
@@ -124,17 +124,18 @@ import java.util.ArrayList;
     @Test
     /*
      * Testing addTreatments with animal ID that does not match
-     * Expected behaviour is treatment arraylist has a size of 0 because "if" statement is not satisfied
+     * 
     */
     public void testAddTreatmentsWithInvalidAnimalID() {
     Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
-    Treatments treatment1 = new Treatments(2, 19, "Feed Fluffy", 5, 3, 0);
-    Treatments treatment2 = new Treatments(2, 0, "Clean cage for Fluffy", 10, 24);
+    Treatments treatment1 = new Treatments(2, 19, "Walk Fluffy", 5, 3, 0);
+    Treatments treatment2 = new Treatments(3, 0, "Play with Fluffy", 10, 24);
     treatments.add(treatment1);
     treatments.add(treatment2);
     rightanimal.addTreatments(treatments);
-    assertEquals("Treatments were added to animal's treatment list even though ID did not match!", 0, (rightanimal.getAnimalTreatments()).size());
+    /* We expect 2 treatments to be in AnimalTreatments, the treatments that populate by way of the Animal constructor, meaning the above treatments were not added */
+    assertEquals("Treatments were added to animal's treatment list even though ID did not match!", 2, (rightanimal.getAnimalTreatments()).size());
     }
 
     @Test 
@@ -154,23 +155,34 @@ import java.util.ArrayList;
         }
     }
 
-    @Test
+    @Test 
+    /*
+     * 
+    */
     public void testAddTreatmentsForMultipleAnimals() {
     Animal rightanimal = new Animal(1, "Fluffy", "Porcupine");
     Animal animal2 = new Animal(2, "Woof", "Coyote");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
-    treatments.add(new Treatments(1, 19, "Feed Fluffy", 5, 3, 0));
-    treatments.add(new Treatments(2, 10, "Feed Woof", 20, 2, 10));
+    treatments.add(new Treatments(1, 19, "Feeding Fluffy", 5, 3, 0));
+    treatments.add(new Treatments(2, 10, "Feeding Woof", 20, 2, 10));
     treatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
     treatments.add(new Treatments(2, 30, "Give Woof medicine", 5, 2));
     rightanimal.addTreatments(treatments);
+    animal2.addTreatments(treatments);
     ArrayList<Treatments> treatments1 = rightanimal.getAnimalTreatments();
     ArrayList<Treatments> treatments2 = animal2.getAnimalTreatments();
 
-     assertEquals(2, treatments1.size());
-     assertEquals(2, treatments2.size());
+    /*expected is 4 for both because new animal object will cause constructor "Animal" to populate AnimalTreatments with 2 treatments first, then the other 2 treatments we add here makes 4 */
+     assertEquals(4, treatments1.size()); 
+     assertEquals(4, treatments2.size()); 
 
     }
+
+
+
+
+
+
 }
     
   
