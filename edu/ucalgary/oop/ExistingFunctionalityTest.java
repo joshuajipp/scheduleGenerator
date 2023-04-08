@@ -1,7 +1,7 @@
 /**
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
-@version    	1.2
+@version    	1.3
 @since  	1.0
 */
 package edu.ucalgary.oop;
@@ -316,7 +316,15 @@ import java.util.ArrayList;
 
         }
 }
-    
+    @Test
+    public void testCreateScheduleNoTreatments() throws ScheduleOverflowException {
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        schedule.createSchedule();
+        Treatments[][] scheduleArray = schedule.getSchedule();
+        assertEquals(24, scheduleArray.length);
+        assertEquals(12, scheduleArray[0].length);
+    }
     @Test(expected = ScheduleOverflowException.class)
     /*
      * 
@@ -334,19 +342,53 @@ import java.util.ArrayList;
     }
 
     @Test
-    public void testCreateSchedule_addsAllTreatments() throws ScheduleOverflowException {
+    /*
+     * 
+     */
+    public void testCreateScheduleAddsManyTreatments() throws ScheduleOverflowException {
         // test that all treatments are added to the schedule
+        animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
         ArrayList<Treatments> testTreatments = new ArrayList<>();
         testTreatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
         testTreatments.add(new Treatments(2, 10, "Feeding", 20, 2, 10));
         testTreatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
+        schedule.createSchedule();
+        schedule.addTreatments(testTreatments);
+        int expectedScheduleSize = testTreatments.size();
+        int actualScheduleSize = 0;
+        Treatments[][] scheduleArray = schedule.getSchedule();
+        for (int i = 0; i < scheduleArray.length; i++) {
+            for (int j = 0; j < scheduleArray[i].length; j++) {
+                if (scheduleArray[i][j] != null) {
+                    actualScheduleSize += 1;
+                }
+            }
+        }
+        assertEquals(expectedScheduleSize, actualScheduleSize);
+        
+    }
+
+    @Test
+    /*
+     * 
+     */
+    public void testCreateScheduleHoldsKitFeeding() throws ScheduleOverflowException {
+        // test that Kit feeding treatment is held separately and added to the schedule later
+        Animal animal = new Animal(5, "Sherlock Holmes", "Kits");
+        animalsArray.add(animal);
+        Schedule schedule = new Schedule(animalsArray);
+        ArrayList<Treatments> testTreatments = new ArrayList<>(animal.getAnimalTreatments());
+        testTreatments.add(new Treatments(2, 0, "Kit feeding", 1, 2, 10));
         schedule.addTreatments(testTreatments);
         schedule.createSchedule();
-        ArrayList<Treatments> scheduledTreatments = schedule.getSortedTreatments();
-       
-    }
-    
+        Treatments[][] scheduleArray = schedule.getSchedule();
+        assertEquals(testTreatments.get(0).getDescription(), scheduleArray[0][0].getDescription());
+        assertEquals(testTreatments.get(0).getStartHour(), scheduleArray[0][0].getStartHour());
+}
+
+
+
 }  
 
 
