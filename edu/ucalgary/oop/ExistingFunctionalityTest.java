@@ -15,11 +15,11 @@ import java.util.ArrayList;
  public class ExistingFunctionalityTest {
     
     private Animal rightanimal;
-
+    private ArrayList<Animal> animalsArray;
     @Before
     public void setup() {
         rightanimal = new Animal(1, "Fluffy", "Porcupine");
-
+        animalsArray = new ArrayList<>();
     }
 
     @Test 
@@ -216,7 +216,7 @@ import java.util.ArrayList;
      * 
      */
     public void testGetSortedTreatmentsEmptyAnimals() {
-        ArrayList<Animal> animalsArray = new ArrayList<>();
+    
         Schedule schedule = new Schedule(animalsArray);
         ArrayList<Treatments> treatments = schedule.getSortedTreatments();
         assertTrue(treatments.isEmpty());
@@ -227,7 +227,7 @@ import java.util.ArrayList;
      * 
      */
     public void testGetSortedTreatmentsOneAnimalNoTreatments() {
-        ArrayList<Animal> animalsArray = new ArrayList<>();
+     
         animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
@@ -239,7 +239,6 @@ import java.util.ArrayList;
      * 
      */
     public void testGetSortedTreatmentsOneAnimalOneTreatment() {
-        ArrayList<Animal> animalsArray = new ArrayList<>();
         ArrayList<Treatments> testtreatments = new ArrayList<Treatments>();
         animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
@@ -257,7 +256,6 @@ import java.util.ArrayList;
      */
     public void testGetSortedTreatmentsManyAnimalsManyTreatments() {
         // Create test data
-        ArrayList<Animal> animalsArray = new ArrayList<>();
         ArrayList<Treatments> testTreatments = new ArrayList<>();
         Schedule schedule = new Schedule(animalsArray);
         Animal animal2 = new Animal(2, "Woof", "Coyote");
@@ -293,16 +291,15 @@ import java.util.ArrayList;
      */
     public void testGetSortedTreatmentsSameAnimalTwiceManyTreatments() {
         // Create test data
-        ArrayList<Animal> animalsArray = new ArrayList<>();
         Animal rightanimal2 = new Animal(1, "Fluffy", "Porcupine");
         animalsArray.add(rightanimal2);
         animalsArray.add(rightanimal);
         ArrayList<Treatments> testTreatments = new ArrayList<>();
         Schedule schedule = new Schedule(animalsArray);
         testTreatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
-        testTreatments.add(new Treatments(1, 10, "Feeding", 20, 2, 10));
+        testTreatments.add(new Treatments(2, 10, "Feeding", 20, 2, 10));
         testTreatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
-        testTreatments.add(new Treatments(1, 30, "Give Woof medicine", 5, 2));
+        testTreatments.add(new Treatments(2, 30, "Give Woof medicine", 5, 2));
     
         // Sort the treatments
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
@@ -325,7 +322,6 @@ import java.util.ArrayList;
      * 
      */
     public void testCreateScheduleThrowsException() throws ScheduleOverflowException {
-        ArrayList<Animal> animalsArray = new ArrayList<>();
         ArrayList<Treatments> manyTreatments = new ArrayList<>();
         animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
@@ -337,8 +333,21 @@ import java.util.ArrayList;
         schedule.createSchedule();
     }
 
-
-}
+    @Test
+    public void testCreateSchedule_addsAllTreatments() throws ScheduleOverflowException {
+        // test that all treatments are added to the schedule
+        Schedule schedule = new Schedule(animalsArray);
+        ArrayList<Treatments> testTreatments = new ArrayList<>();
+        testTreatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
+        testTreatments.add(new Treatments(2, 10, "Feeding", 20, 2, 10));
+        testTreatments.add(new Treatments(1, 20, "Play with Fluffy", 15, 2, 10));
+        schedule.addTreatments(testTreatments);
+        schedule.createSchedule();
+        ArrayList<Treatments> scheduledTreatments = schedule.getSortedTreatments();
+       
+    }
+    
+}  
 
 
     
