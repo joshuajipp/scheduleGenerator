@@ -48,7 +48,8 @@ import java.util.Collections;
         exptreatments.add(new Treatments(1, 19, "Feeding", 5,
         3, 0));
         exptreatments.add(new Treatments(1, 0, "Clean porcupine Cage", 10, 24));
-
+     
+        // Compare each treatment to ensure it matches the expected treatment 
         for (int i = 0; i < testtreatments.size(); i++) {
             Treatments test = testtreatments.get(i);
             Treatments exp = exptreatments.get(i);
@@ -99,17 +100,13 @@ import java.util.Collections;
 
     // Test constructor with invalid species
     @Test(expected = IllegalArgumentException.class)
-    /*
-     * 
-     */
+    // Test to ensure an IllegalArgumentException is thrown for an invalid species input in the constructor
     public void testAnimalConstructor_invalidSpecies() {
         new Animal(1, "Fluffy", "Invalid Species");
     }
       
     @Test
-    /*
-     * 
-     */
+    // Test to ensure the animal constructor correctly initializes the animal object when the ID is set to 0
     public void testAnimalConstructor_idZero() {
         Animal animal = new Animal(0, "Fluffy", "Porcupine");
         assertEquals(0, animal.getID());
@@ -118,9 +115,7 @@ import java.util.Collections;
       }
       
     @Test(expected = NullPointerException.class)
-    /*
-     * 
-     */
+    // Test to ensure a NullPointerException is thrown for null species input in the constructor
     public void testAnimalConstructor_nullSpecies() {
         new Animal(1, "Fluffy", null);
         }
@@ -137,6 +132,7 @@ import java.util.Collections;
     exptreatments.add(treatment1);
     exptreatments.add(treatment2);
     rightanimal.addTreatments(exptreatments);
+    // Compare each treatment to ensure it matches the expected treatment
     for (int i = 0; i < testtreatments.size(); i++) {
         Treatments test = testtreatments.get(i);
         Treatments exp = exptreatments.get(i);
@@ -185,8 +181,9 @@ import java.util.Collections;
 
     @Test 
     /*
-     * 
-    */
+     * Test adding treatments for multiple animals and ensuring
+     * that the treatments are added correctly for each animal
+     */
     public void testAddTreatmentsForMultipleAnimals() {
     Animal animal2 = new Animal(2, "Woof", "Coyote");
     ArrayList<Treatments> treatments = new ArrayList<Treatments>();
@@ -200,6 +197,8 @@ import java.util.Collections;
     ArrayList<Treatments> treatments2 = animal2.getAnimalTreatments();
 
     /*expected is 4 for both because new animal object will cause constructor "Animal" to populate AnimalTreatments with 2 treatments first, then the other 2 treatments we add here makes 4 */
+    // cause the Animal constructor to populate AnimalTreatments with 2 treatments
+    // first, and then the other 2 treatments we add here make 4
      assertEquals(4, treatments1.size()); 
      assertEquals(4, treatments2.size()); 
 
@@ -207,7 +206,8 @@ import java.util.Collections;
 
     @Test
     /*
-     * 
+     * Test adding an empty treatments list to an animal
+     * and verify that the animal's existing treatments remain unchanged
      */
     public void testAddTreatmentsToAnimalWithNoExistingTreatments() {
         ArrayList<Treatments> treatments = new ArrayList<>();
@@ -218,7 +218,8 @@ import java.util.Collections;
 
     @Test
     /*
-     * 
+     * Test getting a sorted list of treatments when the animals list is empty
+     * and verify that the returned treatments list is empty
      */
     public void testGetSortedTreatmentsEmptyAnimals() {
     
@@ -229,7 +230,8 @@ import java.util.Collections;
 
     @Test
     /*
-     * 
+     * Test getting a sorted list of treatments when there is one animal
+     * with no additional treatments added (only the two initial treatments)
      */
     public void testGetSortedTreatmentsOneAnimalNoTreatments() {
      
@@ -241,7 +243,8 @@ import java.util.Collections;
 
     @Test
     /*
-     * 
+     * Test getting a sorted list of treatments when there is one animal
+     * with one additional treatment added
      */
     public void testGetSortedTreatmentsOneAnimalOneTreatment() {
         ArrayList<Treatments> testtreatments = new ArrayList<Treatments>();
@@ -257,7 +260,8 @@ import java.util.Collections;
    
     @Test
     /*
-     * 
+     * Test getting a sorted list of treatments when there are multiple animals
+     * with multiple treatments added
      */
     public void testGetSortedTreatmentsManyAnimalsManyTreatments() {
         // Create test data
@@ -276,6 +280,7 @@ import java.util.Collections;
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
         assertEquals(sortedTreatments.size(), testTreatments.size());
         
+        // Check if the sorted list is sorted correctly     
         for (int i = 0; i < testTreatments.size(); i++) { 
             Treatments exp = sortedTreatments.get(i);
             Treatments last = sortedTreatments.get(testTreatments.size()-1);
@@ -292,7 +297,7 @@ import java.util.Collections;
     
     @Test
     /*
-     * 
+     * Test sorting treatments for the same animal with different treatments
      */
     public void testGetSortedTreatmentsSameAnimalTwiceManyTreatments() {
         // Create test data
@@ -310,6 +315,7 @@ import java.util.Collections;
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
         assertEquals(sortedTreatments.size(), testTreatments.size());
         
+        // Check if the sorted list is sorted correctly     
         for (int i = 0; i < testTreatments.size(); i++) { 
             Treatments exp = sortedTreatments.get(i);
             Treatments last = sortedTreatments.get(testTreatments.size()-1);
@@ -322,17 +328,21 @@ import java.util.Collections;
         }
 }
     @Test
+   // This test checks if the createSchedule method initializes the schedule correctly when no treatments are added
     public void testCreateScheduleNoTreatments() throws ScheduleOverflowException {
-        animalsArray.add(rightanimal);
+        //Add an animal to the animalsArray and Create a new Schedule object with the animalsArray
+        animalsArray.add(rightanimal); 
         Schedule schedule = new Schedule(animalsArray);
+        // Call the createSchedule method and Retrieve the schedule array
         schedule.createSchedule();
         Treatments[][] scheduleArray = schedule.getSchedule();
-        assertEquals(24, scheduleArray.length);
-        assertEquals(12, scheduleArray[0].length);
+        assertEquals(24, scheduleArray.length); // Check if the schedule array has 24 rows (one for each hour of the day)
+        assertEquals(12, scheduleArray[0].length); // Check if the schedule array has 12 columns (one for each 5-minute interval within an hour)
     }
     @Test(expected = ScheduleOverflowException.class)
     /*
-     * 
+     * Test for ScheduleOverflowException when the number of treatments
+     * exceeds the available schedule slots
      */
     public void testCreateScheduleThrowsException() throws ScheduleOverflowException {
         ArrayList<Treatments> manyTreatments = new ArrayList<>();
@@ -348,7 +358,7 @@ import java.util.Collections;
 
     @Test
     /*
-     * 
+     * Test if all treatments are added to the schedule correctly
      */
     public void testCreateScheduleAddsManyTreatments() throws ScheduleOverflowException {
         // test that all treatments are added to the schedule
@@ -375,9 +385,7 @@ import java.util.Collections;
     }
 
     @Test
-    /*
-     * 
-     */
+    // This test checks if the createSchedule method properly handles Kit feeding treatments
     public void testCreateScheduleHoldsKitFeeding() throws ScheduleOverflowException {
         // test that Kit feeding treatment is held separately and added to the schedule later
         Animal animal = new Animal(5, "Sherlock Holmes", "Kits");
@@ -393,9 +401,7 @@ import java.util.Collections;
     }   
 
     @Test
-    /*
-    * 
-    */
+    // This test checks if the writeSchedule method generates an empty schedule string when there are no treatments
     public void testWriteScheduleNoTreatments() throws IOException, ScheduleOverflowException {
         // create an empty schedule file
         Files.write(Paths.get("schedule.txt"), "".getBytes());
@@ -412,6 +418,7 @@ import java.util.Collections;
     }
 
     @Test
+    // This test checks if the writeSchedule method generates a schedule string with one treatment
     public void testWriteSchedule_oneTreatment() throws IOException, ScheduleOverflowException {
         // Test that schedule string includes one scheduled treatment
         Files.write(Paths.get("schedule.txt"), "".getBytes());
