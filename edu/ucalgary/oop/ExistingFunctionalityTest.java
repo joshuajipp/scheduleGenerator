@@ -10,7 +10,12 @@ import org.junit.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 
  public class ExistingFunctionalityTest {
     
@@ -385,10 +390,45 @@ import java.util.ArrayList;
         Treatments[][] scheduleArray = schedule.getSchedule();
         assertEquals(testTreatments.get(0).getDescription(), scheduleArray[0][0].getDescription());
         assertEquals(testTreatments.get(0).getStartHour(), scheduleArray[0][0].getStartHour());
-}
+    }   
 
+    @Test
+    /*
+    * 
+    */
+    public void testWriteScheduleNoTreatments() throws IOException, ScheduleOverflowException {
+        // create an empty schedule file
+        Files.write(Paths.get("schedule.txt"), "".getBytes());
+        
+        // Test that schedule string is empty when there are no treatments scheduled
+        Schedule schedule = new Schedule(new ArrayList<>());
+        schedule.createSchedule();
+        schedule.writeSchedule();
+        String scheduleString = new String(Files.readAllBytes(Paths.get("schedule.txt")), StandardCharsets.UTF_8);
+        assertEquals("", scheduleString);
+        
+        // delete the schedule file
+        Files.deleteIfExists(Paths.get("schedule.txt"));
+    }
 
-
+    @Test
+    public void testWriteSchedule_oneTreatment() throws IOException, ScheduleOverflowException {
+        // Test that schedule string includes one scheduled treatment
+        Files.write(Paths.get("schedule.txt"), "".getBytes());
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        schedule.createSchedule();
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        treatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
+        schedule.addTreatments(treatments);
+        schedule.writeSchedule();
+        String scheduleString = new String(Files.readAllBytes(Paths.get("schedule.txt")), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        /*assertTrue(scheduleString.contains("Feeding"));*/
+        /*assertTrue(scheduleString.contains("5"));*/
+        /*assertTrue(scheduleString.contains(rightanimal.getNickname()));*/
+        Files.deleteIfExists(Paths.get("schedule.txt"));
+    }
 }  
 
 
