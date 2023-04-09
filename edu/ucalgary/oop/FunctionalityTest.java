@@ -3,7 +3,7 @@
 @author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
-@version    1.5
+@version    1.6
 @since  	1.0
 */
 package edu.ucalgary.oop;
@@ -38,9 +38,9 @@ import java.util.ArrayList;
      * Correct animal input test, animal has a one word name
      */
     public void testAnimalCorrectInputOneName() {
-        assertEquals(1, rightanimal.getID());
-        assertEquals("Fluffy", rightanimal.getNickname());
-        assertEquals(AnimalType.PORCUPINE, rightanimal.getSpecies());
+        assertEquals ("Animal ID should be 1", 1, rightanimal.getID());
+        assertEquals("Animal nickname should be Fluffy", "Fluffy", rightanimal.getNickname());
+        assertEquals("Animal species should be PORCUPINE", AnimalType.PORCUPINE, rightanimal.getSpecies());
 
     }
 
@@ -64,16 +64,16 @@ import java.util.ArrayList;
             Treatments exp = expectedTreatments.get(i);
 
             // Assert that each field of the treatment object matches the expected value
-            assertEquals(exp.getAnimalID(), test.getAnimalID()); 
-            assertEquals(exp.getStartHour(), test.getStartHour()); 
-            assertEquals(exp.getDescription(), test.getDescription()); 
-            assertEquals(exp.getDuration(), test.getDuration());
-            assertEquals(exp.getMaxWindow(), test.getMaxWindow()); 
+            assertEquals("Animal ID field should match", exp.getAnimalID(), test.getAnimalID()); 
+            assertEquals("Start hour field should match", exp.getStartHour(), test.getStartHour()); 
+            assertEquals("Description field should match", exp.getDescription(), test.getDescription()); 
+            assertEquals("Duration field should match", exp.getDuration(), test.getDuration());
+            assertEquals("Max window field should match", exp.getMaxWindow(), test.getMaxWindow()); 
 
-            // For the first treatment, also test the setup time field
-            if (i==0) {
-                assertEquals(exp.getSetupTime(), test.getSetupTime());
-            }
+        // For the first treatment, also test the setup time field
+        if (i==0) {
+            assertEquals("Setup time field should match", exp.getSetupTime(), test.getSetupTime());
+        }
         }
     }
 
@@ -94,11 +94,11 @@ import java.util.ArrayList;
         exptreatments.add(new Treatments(5, 0, "Clean cage for the Kits", 30, 24));
         Treatments test = testtreatments.get(0);
         Treatments exp = exptreatments.get(0);
-        assertEquals(exp.getAnimalID(), test.getAnimalID());
-        assertEquals(exp.getStartHour(), test.getStartHour());
-        assertEquals(exp.getDescription(), test.getDescription()); 
-        assertEquals(exp.getDuration(), test.getDuration());
-        assertEquals(exp.getMaxWindow(), test.getMaxWindow());
+        assertEquals("Animal ID field should match", exp.getAnimalID(), test.getAnimalID()); 
+        assertEquals("Start hour field should match", exp.getStartHour(), test.getStartHour()); 
+        assertEquals("Description field should match", exp.getDescription(), test.getDescription()); 
+        assertEquals("Duration field should match", exp.getDuration(), test.getDuration());
+        assertEquals("Max window field should match", exp.getMaxWindow(), test.getMaxWindow()); 
     }
 
     @Test(expected = IllegalArgumentException.class)    
@@ -112,22 +112,22 @@ import java.util.ArrayList;
     // Test constructor with invalid species
     @Test(expected = IllegalArgumentException.class)
     // Test to ensure an IllegalArgumentException is thrown for an invalid species input in the constructor
-    public void testAnimalConstructor_invalidSpecies() {
+    public void testAnimalConstructorInvalidSpecies() {
         new Animal(1, "Fluffy", "Invalid Species");
     }
       
     @Test
     // Test to ensure the animal constructor correctly initializes the animal object when the ID is set to 0
-    public void testAnimalConstructor_idZero() {
+    public void testAnimalConstructorIdZero() {
         Animal animal = new Animal(0, "Fluffy", "Porcupine");
-        assertEquals(0, animal.getID());
-        assertEquals("Fluffy", animal.getNickname());
-        assertEquals(AnimalType.PORCUPINE, animal.getSpecies());
+        assertEquals("The animal ID should be 0", 0, animal.getID());
+        assertEquals("The animal nickname should be 'Fluffy'", "Fluffy", animal.getNickname());
+        assertEquals("The animal species should be 'Porcupine'", AnimalType.PORCUPINE, animal.getSpecies());
       }
       
     @Test(expected = NullPointerException.class)
     // Test to ensure a NullPointerException is thrown for null species input in the constructor
-    public void testAnimalConstructor_nullSpecies() {
+    public void testAnimalConstructorNullSpecies() {
         new Animal(1, "Fluffy", null);
         }
       
@@ -138,8 +138,8 @@ import java.util.ArrayList;
     public void testAddTreatments() {
         // Define the expected treatments
         ArrayList<Treatments> exptreatments = new ArrayList<Treatments>();
-        Treatments treatment1 = new Treatments(1, 19, "Feed Fluffy", 5, 3, 0);
-        Treatments treatment2 = new Treatments(1, 0, "Clean cage for Fluffy", 10, 24);
+        Treatments treatment1 = new Treatments(1, 19, "Feeding", 5, 3, 0);
+        Treatments treatment2 = new Treatments(1, 0, "Clean porcupine Cage", 10, 24);
         exptreatments.add(treatment1);
         exptreatments.add(treatment2);
         
@@ -150,16 +150,16 @@ import java.util.ArrayList;
         ArrayList<Treatments> testtreatments = rightanimal.getAnimalTreatments();
         
         // Compare each treatment to ensure it matches the expected treatment
-        for (int i = 0; i < testtreatments.size(); i++) {
+        for (int i = 0; i < (exptreatments.size()); i++) {
             Treatments test = testtreatments.get(i);
             Treatments exp = exptreatments.get(i);
-            assertEquals(exp.getAnimalID(), test.getAnimalID()); 
-            assertEquals(exp.getStartHour(), test.getStartHour()); 
-            assertEquals(exp.getDescription(), test.getDescription()); 
-            assertEquals(exp.getDuration(), test.getDuration()); 
-            assertEquals(exp.getMaxWindow(), test.getMaxWindow()); 
+            assertEquals("Animal ID field should match", exp.getAnimalID(), test.getAnimalID()); 
+            assertEquals("Start hour field should match", exp.getStartHour(), test.getStartHour()); 
+            assertEquals("Description field should match", exp.getDescription(), test.getDescription()); 
+            assertEquals("Duration field should match", exp.getDuration(), test.getDuration());
+            assertEquals("Max window field should match", exp.getMaxWindow(), test.getMaxWindow()); 
             if (i==1) {
-                assertEquals(exp.getSetupTime(), test.getSetupTime());
+                assertEquals("Setup time field should match", exp.getSetupTime(), test.getSetupTime());
             }
         }
     }
@@ -192,7 +192,7 @@ import java.util.ArrayList;
         rightanimal.addTreatments(treatments);
         
         for (Treatments treat : treatments) {
-            assertTrue(rightanimal.getAnimalTreatments().contains(treat));
+            assertTrue("Failed to add expected treatment to animal's list of treatments", rightanimal.getAnimalTreatments().contains(treat));
             }
     }
 
@@ -201,7 +201,7 @@ import java.util.ArrayList;
      * Test adding treatments for multiple animals and ensuring
      * that the treatments are added correctly for each animal
      */
-    public void testAddTreatmentsForMultipleAnimals() {
+    public void testAddTreatmentsForMultipleAnimalsTwoTreatmentsEach() {
         Animal animal2 = new Animal(2, "Woof", "Coyote");
         ArrayList<Treatments> treatments = new ArrayList<Treatments>();
         treatments.add(new Treatments(1, 19, "Feeding Fluffy", 5, 3, 0));
@@ -213,11 +213,11 @@ import java.util.ArrayList;
         ArrayList<Treatments> treatments1 = rightanimal.getAnimalTreatments();
         ArrayList<Treatments> treatments2 = animal2.getAnimalTreatments();
 
-        /*expected is 4 for both because new animal object will cause constructor "Animal" to populate AnimalTreatments with 2 treatments first, then the other 2 treatments we add here makes 4 */
+        // expected is 4 for both because new animal object will cause constructor "Animal" to populate AnimalTreatments with 2 treatments first, then the other 2 treatments we add here makes 4 
         // cause the Animal constructor to populate AnimalTreatments with 2 treatments
-        // first, and then the other 2 treatments we add here make 4
-        assertEquals(4, treatments1.size()); 
-        assertEquals(4, treatments2.size()); 
+        // first, and then the other 2 treatments we add per animal here make 4
+        assertEquals("Unexpected number of treatments for animal 1", 4, treatments1.size()); 
+        assertEquals("Unexpected number of treatments for animal 2", 4, treatments2.size());
 
     }
 
@@ -229,7 +229,7 @@ import java.util.ArrayList;
     public void testAddTreatmentsToAnimalWithNoExistingTreatments() {
         ArrayList<Treatments> treatments = new ArrayList<>();
         rightanimal.addTreatments(treatments);
-        assertEquals(2, rightanimal.getAnimalTreatments().size());
+        assertEquals("Adding an empty treatments list to an animal with existing treatments should not change the number of treatments", 2, rightanimal.getAnimalTreatments().size());
 
     }
 
@@ -242,7 +242,7 @@ import java.util.ArrayList;
     
         
         ArrayList<Treatments> treatments = schedule.getSortedTreatments();
-        assertTrue(treatments.isEmpty());
+        assertTrue("The treatments list should be empty when there are no animals in the schedule", treatments.isEmpty());
     }
 
     @Test
@@ -255,7 +255,7 @@ import java.util.ArrayList;
         animalsArray.add(rightanimal);
         
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
-        assertTrue(sortedTreatments.size() == 2);
+        assertTrue("Expected sortedTreatments array to have size of 2", sortedTreatments.size() == 2);
     }
 
     @Test
@@ -271,7 +271,7 @@ import java.util.ArrayList;
         testtreatments.add(treatment1);
         schedule.addTreatments(testtreatments);
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
-        assertEquals(3, sortedTreatments.size());
+        assertEquals("Expected the size of sortedTreatments ArrayList to be 3", treatment1.getMaxWindow(), sortedTreatments.size());
     }
     
    
@@ -281,7 +281,6 @@ import java.util.ArrayList;
      * with multiple treatments added
      */
     public void testGetSortedTreatmentsManyAnimalsManyTreatments() {
-        // Create test data
         ArrayList<Treatments> testTreatments = new ArrayList<>();
         
         Animal animal2 = new Animal(2, "Woof", "Coyote");
@@ -295,17 +294,17 @@ import java.util.ArrayList;
     
         // Sort the treatments
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
-        assertEquals(sortedTreatments.size(), testTreatments.size());
+        assertEquals("The size of the sorted treatments list should match the size of the expected treatments list", sortedTreatments.size(), testTreatments.size());
         
-        // Check if the sorted list is sorted correctly     
+        // Check if the sorted list is sorted correctly,  ascending or descending order based on what is set in the schedule class
         for (int i = 0; i < testTreatments.size(); i++) { 
             Treatments exp = sortedTreatments.get(i);
             Treatments last = sortedTreatments.get(testTreatments.size()-1);
-            assertTrue(exp.getAnimalID() <= last.getAnimalID()); 
-            assertTrue(exp.getDuration() >= last.getDuration());
-            assertTrue(exp.getSetupTime() >= last.getSetupTime());
-            assertTrue(exp.getStartHour() >= last.getStartHour()); 
-            assertTrue(exp.getMaxWindow() <= last.getMaxWindow());
+            assertTrue("The animal ID of the current treatment in the sorted list should be less than or equal to the last animal ID", exp.getAnimalID() <= last.getAnimalID()); 
+            assertTrue("The duration of the current treatment in the sorted list should be greater than or equal to the last duration", exp.getDuration() >= last.getDuration());
+            assertTrue("The setup time of the current treatment in the sorted list should be greater than or equal to the last setup time", exp.getSetupTime() >= last.getSetupTime());
+            assertTrue("The start hour of the current treatment in the sorted list should be greater than or equal to the last start hour", exp.getStartHour() >= last.getStartHour()); 
+            assertTrue("The max window of the current treatment in the sorted list should be less than or equal to the last max window", exp.getMaxWindow() <= last.getMaxWindow());
 
         }
 
@@ -330,17 +329,17 @@ import java.util.ArrayList;
     
         // Sort the treatments
         ArrayList<Treatments> sortedTreatments = schedule.getSortedTreatments();
-        assertEquals(sortedTreatments.size(), testTreatments.size());
+        assertEquals("The size of the sorted treatments list should match the size of the expected treatments list", sortedTreatments.size(), testTreatments.size());
         
-        // Check if the sorted list is sorted correctly     
+        // Check if the sorted list is sorted correctly, ascending or descending order based on what is set in the schedule class
         for (int i = 0; i < testTreatments.size(); i++) { 
             Treatments exp = sortedTreatments.get(i);
             Treatments last = sortedTreatments.get(testTreatments.size()-1);
-            assertTrue(exp.getAnimalID() <= last.getAnimalID()); 
-            assertTrue(exp.getDuration() <= last.getDuration());
-            assertTrue(exp.getSetupTime() >= last.getSetupTime());
-            assertTrue(exp.getStartHour() >= last.getStartHour()); 
-            assertTrue(exp.getMaxWindow() <= last.getMaxWindow());
+            assertTrue("The animal ID of the current treatment in the sorted list should be less than or equal to the last animal ID", exp.getAnimalID() <= last.getAnimalID()); 
+            assertTrue("The duration of the current treatment in the sorted list should be less than or equal to the last duration", exp.getDuration() <= last.getDuration());
+            assertTrue("The setup time of the current treatment in the sorted list should be greater than or equal to the last setup time", exp.getSetupTime() >= last.getSetupTime());
+            assertTrue("The start hour of the current treatment in the sorted list should be greater than or equal to the last start hour", exp.getStartHour() >= last.getStartHour()); 
+            assertTrue("The max window of the current treatment in the sorted list should be less than or equal to the last max window", exp.getMaxWindow() <= last.getMaxWindow());
 
         }
 }
@@ -355,9 +354,10 @@ import java.util.ArrayList;
         // Call the createSchedule method and Retrieve the schedule array
         schedule.createSchedule();
         Treatments[][] scheduleArray = schedule.getSchedule();
-        assertEquals(24, scheduleArray.length); // Check if the schedule array has 24 rows (one for each hour of the day)
-        assertEquals(12, scheduleArray[0].length); // Check if the schedule array has 12 columns (one for each 5-minute interval within an hour)
+        assertEquals("The schedule array should have 24 rows, one for each hour of the day", 24, scheduleArray.length); 
+        assertEquals("Each row in the schedule array should have 12 columns, one for each 5-minute interval within an hour", 12, scheduleArray[0].length); 
     }
+
     @Test(expected = ScheduleOverflowException.class)
     /*
      * Test for ScheduleOverflowException when the number of treatments
@@ -374,6 +374,7 @@ import java.util.ArrayList;
         }
         schedule.createSchedule();
     }
+
     @Test(expected = ScheduleOverflowException.class)
     /*
      * Test for ScheduleOverflowException when the startHour
@@ -417,7 +418,7 @@ import java.util.ArrayList;
                 }
             }
         }
-        assertEquals(expectedScheduleSize, actualScheduleSize);
+        assertEquals("The expected number of treatments were not added to the schedule", expectedScheduleSize, actualScheduleSize);
     }
 
     @Test
@@ -434,8 +435,8 @@ import java.util.ArrayList;
         schedule.addTreatments(testTreatments);
         schedule.createSchedule();
         Treatments[][] scheduleArray = schedule.getSchedule();
-        assertEquals(testTreatments.get(0).getDescription(), scheduleArray[0][0].getDescription());
-        assertEquals(testTreatments.get(0).getStartHour(), scheduleArray[0][0].getStartHour());
+        assertEquals("Kit feeding was not added or not added correctly to the schedule", testTreatments.get(0).getDescription(), scheduleArray[0][0].getDescription());
+        assertEquals("Kit feeding start hour was not added or not added correctly to the schedule", testTreatments.get(0).getStartHour(), scheduleArray[0][0].getStartHour());
     }   
 
     @Test
@@ -450,7 +451,7 @@ import java.util.ArrayList;
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
         // Test that schedule string is empty when there are no treatments scheduled
-        assertEquals("", scheduleString);
+        assertEquals("The schedule string is not empty when there are no treatments scheduled", "", scheduleString);
         // delete the schedule file
         Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
     }
@@ -476,10 +477,12 @@ import java.util.ArrayList;
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
         
         // Verify that the output string contains the correct information
-        assertTrue(scheduleString.contains(rightanimal.getNickname()));
-        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalNameOne)));
-        assertTrue(scheduleString.contains("Clean porcupine Cage"));
-        assertFalse(scheduleString.contains("+ backup volunteer"));
+        assertTrue("Schedule string should contain the animal's nickname", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule string should contain the feeding treatment for the animal", scheduleString.contains(String.format("Feeding - %s", animalNameOne)));
+        assertTrue("Schedule string should contain the cleaning treatment for the animal's cage", scheduleString.contains(String.format("Clean %s Cage", 
+            rightanimal.getSpecies().toString().toLowerCase())));
+        assertFalse("Schedule string should not contain backup volunteer treatment", scheduleString.contains("+ backup volunteer"));
+        
         
         // Clean up by deleting the file
         Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
@@ -504,13 +507,13 @@ import java.util.ArrayList;
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
         System.out.println(scheduleString);
-        assertTrue(scheduleString.contains(rightanimal.getNickname()));
-        assertTrue(scheduleString.contains(animal2.getNickname()));
-        assertFalse(scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
-        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
-        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
-        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
-        assertFalse(scheduleString.contains("+ backup volunteer"));
+        assertTrue("Schedule string should contain the nickname of the first animal", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule string should contain the nickname of the second animal", scheduleString.contains(animal2.getNickname()));
+        assertFalse("Feeding treatment for the first animal should not be included in the schedule", scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
+        assertTrue("Feeding treatment for the second animal should be included in the schedule", scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
+        assertTrue("Clean cage treatment for the first animal should be included in the schedule", scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
+        assertTrue("Clean cage treatment for the second animal should be included in the schedule", scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
+        assertFalse("Backup volunteer should not be called in for the schedule", scheduleString.contains("+ backup volunteer"));
 
         Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
     }
@@ -541,15 +544,15 @@ import java.util.ArrayList;
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
         System.out.println(scheduleString);
-        assertTrue(scheduleString.contains(rightanimal.getNickname()));
-        assertTrue(scheduleString.contains(animal2.getNickname()));
+        assertTrue("Schedule string should contain the first animal's name", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule string should contain the second animal's name", scheduleString.contains(animal2.getNickname()));
         //Check for specific descriptions which will be displayed from the treatments, this works for specific spread out times as the schedule tries to optimize depending on startHour
-        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
-        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
-        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
-        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
-        assertTrue(scheduleString.contains(String.format("Play with %s", animalNameOne)));
-        assertFalse(scheduleString.contains("+ backup volunteer"));
+        assertTrue("Schedule string should contain the first animal's feeding treatment", scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
+        assertTrue("Schedule string should contain the second animal's feeding treatment", scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
+        assertTrue("Schedule string should contain the first animal's cage cleaning treatment", scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
+        assertTrue("Schedule string should contain the second animal's cage cleaning treatment", scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
+        assertTrue("Schedule string should contain the first animal's playtime treatment", scheduleString.contains(String.format("Play with %s", animalNameOne)));
+        assertFalse("Schedule string should not contain backup volunteer", scheduleString.contains("+ backup volunteer"));
 
         Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
     }
@@ -567,7 +570,7 @@ import java.util.ArrayList;
         // invalid file name is given
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%HELLO.txt", tomorrow))), StandardCharsets.UTF_8);
         // Test that schedule string is empty when there are no treatments scheduled
-        assertEquals("", scheduleString);
+        assertEquals("Schedule string should not have anything in it when there are no treatments", "", scheduleString);
         // delete the schedule file
         Files.deleteIfExists(Paths.get(String.format("%sHELLO.txt", tomorrow)));
     }
@@ -620,7 +623,75 @@ import java.util.ArrayList;
         // Write the schedule to a file 
     schedule.writeSchedule();
     }
+
+    @Test
+    /*
+    * Tests that the schedule includes treatments for kits as well as adult animals
+    */
+    public void testWriteScheduleWithKits() throws IOException, ScheduleOverflowException {
+        // create an adult animal and a kit
+        Animal kit = new Animal(2, "Kitty", "Kits");
+        String adultSpecies = rightanimal.getSpecies().toString().toLowerCase();
+
+        // add both animals to the schedule
+        animalsArray.add(rightanimal);
+        animalsArray.add(kit);
+
+        // add treatments for both animals
+        ArrayList<Treatments> treatments = new ArrayList<>();
+
+        schedule.addTreatments(treatments);
+
+        // generate and write the schedule
+        schedule.createSchedule();
+        schedule.writeSchedule();
+
+        // read the schedule file and verify that it includes treatments for both animals
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue("Schedule should include treatments for adult animal", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule should include treatments for kit", scheduleString.contains(kit.getNickname()));
+        assertTrue("Schedule should include cleaning treatment for kit's cage", scheduleString.contains(String.format("Clean kits Cage (%s)", kit.getNickname())));
+        assertTrue("Schedule should include cleaning treatment for adult animal's cage", scheduleString.contains(String.format("Clean %s Cage (%s)", 
+            adultSpecies, rightanimal.getNickname())));
+        assertTrue("Schedule should include feeding treatment for adult animal", scheduleString.contains(String.format("Feeding - %s", adultSpecies)));
+        assertFalse("Schedule should not include a backup volunteer", scheduleString.contains("+ backup volunteer"));
+
+        // delete the schedule file
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1))));
     }
+    @Test
+    /*
+    * Tests that the schedule doesn't include a backup volunteer when there are many duplicate treatments, 
+    * these are taken case of by countDuplicateTreatments
+    */
+    public void testWriteScheduleNoBackupVolunteerDuplicateTreatments() throws IOException, ScheduleOverflowException {
+        // add an animal to the schedule
+        animalsArray.add(rightanimal);
+        int i;
+        // add treatments for the animal that exceed the maximum window
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        for (i = 0; i < 22; i++); {
+            treatments.add(new Treatments(1, i, "Feeding", 60, 8, 0));
+        }
+        schedule.addTreatments(treatments);
+        // generate and write the schedule
+        schedule.createSchedule();
+        schedule.writeSchedule();
+        // read the schedule file and verify that it includes the backup volunteer
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue("Schedule should contain the animal's nickname", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule should contain a treatment for cleaning the animal's cage", scheduleString.contains(String.format("Clean %s Cage (%s)", 
+            rightanimal.getSpecies().toString().toLowerCase(), rightanimal.getNickname())));
+        assertTrue("Schedule should contain a treatment for feeding the animal", scheduleString.contains(String.format("Feeding - %s", 
+            rightanimal.getSpecies().toString().toLowerCase())));
+        assertFalse("Schedule should not contain a backup volunteer when there are duplicate treatments", scheduleString.contains("+ backup volunteer"));
+
+        // delete the schedule file
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1))));
+    }
+}
    
 
 
