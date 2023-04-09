@@ -555,7 +555,10 @@ import java.util.ArrayList;
     }
     
     @Test(expected = IOException.class)
-    public void testWriteSchedule_IOException() throws IOException, ScheduleOverflowException {
+    /*
+     * Tests that writeSchedule will throw IOexception when given an invalid file name
+     */
+    public void testWriteScheduleIOException() throws IOException, ScheduleOverflowException {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         // create an empty schedule file
         Schedule schedule = new Schedule(new ArrayList<>());
@@ -568,18 +571,19 @@ import java.util.ArrayList;
         // delete the schedule file
         Files.deleteIfExists(Paths.get(String.format("%sHELLO.txt", tomorrow)));
     }
-    @Test(expected = ScheduleOverflowException.class)
-    public void testWriteSchedule_ScheduleOverflowException() throws IOException, ScheduleOverflowException {
-        // Test that schedule string includes one scheduled treatment
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
 
+    @Test(expected = ScheduleOverflowException.class)
+    /*
+     * Test checks if checks ScheduleOverflowException is thrown when the schedule file runs out of space
+     */
+    public void testWriteScheduleScheduleOverflowException() throws IOException, ScheduleOverflowException {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         animalsArray.add(rightanimal);
-        
         ArrayList<Treatments> treatments = new ArrayList<>();
         
         // Add one treatment at a time to the schedule until it overflows
         for (int i = 0; i < 100; i++) {
-            Treatments overflowTreat = new Treatments(1, 30, "Feeding", 5, 3, 0);
+            Treatments overflowTreat = new Treatments(1, 5, "Feeding", 5, 3, 0);
             treatments.add(overflowTreat);
             schedule.addTreatments(treatments);
             try {
@@ -593,8 +597,32 @@ import java.util.ArrayList;
         // Write the schedule to a file 
         schedule.writeSchedule();
     }
+    @Test(expected = ScheduleOverflowException.class)
+    /*
+     * Test checks if checks ScheduleOverflowException is thrown when the writeschedule is presented with treatments that have invalid startHours
+     */
+    public void testWriteScheduleScheduleOverflowExceptionInvalidStartHour() throws IOException, ScheduleOverflowException {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        animalsArray.add(rightanimal);
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        
+        // Add one treatment with a startHour that is too big
+        Treatments overflowTreat = new Treatments(1, 30, "Feeding", 5, 3, 0);
+        treatments.add(overflowTreat);
+        schedule.addTreatments(treatments);
+        try {
+            schedule.createSchedule();
+        } catch (ScheduleOverflowException e) {
+            // Verify that the exception was thrown and delete the file if it was created
+            Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
+            throw e;
+        }
+        // Write the schedule to a file 
+    schedule.writeSchedule();
+    }
+    }
    
-}
+
 
     
   
