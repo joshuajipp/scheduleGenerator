@@ -17,11 +17,12 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-/*
-HomePageGUI class handles the homepage of the program.
-User will be able to interact with multiple tabs and make changes to the treatment table.
-Will display the schedule to the GUI and will handle if volunteer is needed.
-*/
+/**
+ * HomePageGUI class handles the homepage of the program.
+ * User will be able to interact with multiple tabs and make changes to the
+ * treatment table.
+ * Will display the schedule to the GUI and will handle if volunteer is needed.
+ */
 
 public class HomePageGUI extends JFrame {
     private LocalDate tomorrow = LocalDate.now().plusDays(1);
@@ -34,11 +35,11 @@ public class HomePageGUI extends JFrame {
     private JTable treatmentTable;
     private DefaultTableModel tableModel = new DefaultTableModel();
 
-    /* Constructor */
+    /** Constructor */
     public HomePageGUI() {
     }
 
-    /*
+    /**
      * Constructor
      * Sets up the frame with a title and the size. It also sets a default behaviour
      * when closed.
@@ -56,7 +57,7 @@ public class HomePageGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // set default close operation
     }
 
-    /*
+    /**
      * Constructor
      * Sets up the frame with a title and the size. It also sets a default behaviour
      * when closed.
@@ -77,7 +78,7 @@ public class HomePageGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // set default close operation
     }
 
-    /*
+    /**
      * Called by the constructor
      * Creates a tabbed Panel and adds necessary components within each tab.
      */
@@ -128,7 +129,7 @@ public class HomePageGUI extends JFrame {
         tabbedPane.add("Treatment", treatmentPanel);
     }
 
-    /*
+    /**
      * Helper method
      * Creates the connection to the database
      */
@@ -141,7 +142,7 @@ public class HomePageGUI extends JFrame {
         }
     }
 
-    /*
+    /**
      * Helper method
      * Closes the connection to the database
      */
@@ -154,7 +155,7 @@ public class HomePageGUI extends JFrame {
         }
     }
 
-    /*
+    /**
      * Creates a table and fills each row with data from animal query
      * 
      * @returns created animal table shown in the animal tab
@@ -185,7 +186,7 @@ public class HomePageGUI extends JFrame {
         return table;
     }
 
-    /*
+    /**
      * Creates a table and fills each row with data from task query
      * 
      * @returns created task table shown in the task tab
@@ -218,7 +219,7 @@ public class HomePageGUI extends JFrame {
         return table;
     }
 
-    /*
+    /**
      * Creates a table and fills each row with data from treament query
      * 
      * @returns created treatment table shown in the treatment tab
@@ -250,7 +251,7 @@ public class HomePageGUI extends JFrame {
         table.setFillsViewportHeight(true);
         tableModel.addTableModelListener(new TableModelListener() {
 
-            /*
+            /**
              * Connects to the database and update the database based on changes made to the
              * table in the Frame.
              * Reloads with every change to attempt to create a schedule
@@ -282,7 +283,7 @@ public class HomePageGUI extends JFrame {
         return table;
     }
 
-    /*
+    /**
      * Helper Method
      * Looks for the file containing the schedule. It reads from the file and stores
      * the data to scheduleList.
@@ -306,7 +307,7 @@ public class HomePageGUI extends JFrame {
         return null;
     }
 
-    /*
+    /**
      * Calls main of Schedule class and passes the argument.
      * Depending on the return array of the Schedule class, it involkes Frame
      * accordingly.

@@ -16,14 +16,19 @@ public class Animal {
     private final AnimalType SPECIES;
     private ArrayList<Treatments> animalTreatments = new ArrayList<Treatments>();
 
-    /*
+    /**
      * Constructor
      * 
-     * @param id, name, species of the animal. If there is more than one name,
-     * species is set to AnimalType Kits.
-     * Otherwise, species is set if species appear in the AnimalType enum.
-     * Sets specific treatments for type of species including prep,feed and clean
-     * time.
+     * @param id
+     * @param name
+     * @param species
+     *                If there is more than one name,
+     *                species is set to AnimalType Kits.
+     *                Otherwise, species is set if species appear in the AnimalType
+     *                enum.
+     *                Sets specific treatments for type of species including
+     *                prep,feed and clean
+     *                time.
      */
     public Animal(int id, String name, String species) {
         this.ID = id;
@@ -45,7 +50,7 @@ public class Animal {
 
     }
 
-    /*
+    /**
      * add treatments in the animalTreatments arraylist if animalID matches with ID
      * on treatments database.
      * 
@@ -59,22 +64,22 @@ public class Animal {
         }
     }
 
-    /* Getter */
+    /** Getter */
     public int getID() {
         return ID;
     }
 
-    /* Getter */
+    /** Getter */
     public String getNickname() {
         return NICKNAME;
     }
 
-    /* Getter */
+    /** Getter */
     public AnimalType getSpecies() {
         return SPECIES;
     }
 
-    /* Getter */
+    /** Getter */
     public ArrayList<Treatments> getAnimalTreatments() {
         return animalTreatments;
     }

@@ -8,14 +8,15 @@
 */
 package edu.ucalgary.oop;
 
-/*Custom Exception 
+/**
+ * Custom Exception
  * thrown by Schedule class
  * HomePageGUI catches the exception
  */
 public class ScheduleOverflowException extends Exception {
-    /*
-     * @param custom message from schedule class 
-     * @returns exception message 
+    /**
+     * @param custom message from schedule class
+     * @returns exception message
      */
     public ScheduleOverflowException(String message) {
         super(message);

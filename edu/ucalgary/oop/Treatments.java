@@ -15,7 +15,8 @@ public class Treatments {
     private int duration;
     private int maxWindow;
     private int setupTime;
-    /*Constructor */
+
+    /** Constructor */
     public Treatments(int animalID, int startHour,
             String description, int duration, int maxWindow) {
 
@@ -26,7 +27,8 @@ public class Treatments {
         this.maxWindow = maxWindow;
         this.setupTime = 0;
     }
-    /*Constructor */
+
+    /** Constructor */
     public Treatments(int animalID, int startHour,
             String description, int duration, int maxWindow, int setupTime) {
 
@@ -37,27 +39,33 @@ public class Treatments {
         this.maxWindow = maxWindow;
         this.setupTime = setupTime;
     }
-    /*Getter*/
+
+    /** Getter */
     public int getAnimalID() {
         return animalID;
     }
-    /*Getter*/
+
+    /** Getter */
     public int getStartHour() {
         return startHour;
     }
-    /*Getter */
+
+    /** Getter */
     public String getDescription() {
         return description;
     }
-    /*Getter*/
+
+    /** Getter */
     public int getDuration() {
         return duration;
     }
-    /*Getter*/
+
+    /** Getter */
     public int getMaxWindow() {
         return maxWindow;
     }
-    /*Getter*/
+
+    /** Getter */
     public int getSetupTime() {
         return setupTime;
     }

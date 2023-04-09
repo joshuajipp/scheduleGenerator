@@ -18,7 +18,7 @@ public class Schedule {
     private Treatments[][] schedule = new Treatments[24][12];
     private Treatments[][] backupSchedule = new Treatments[24][12];
 
-    /*
+    /**
      * Constructor
      * 
      * @param arraylist of animals.
@@ -27,19 +27,18 @@ public class Schedule {
         this.animalsArray = animals;
     }
 
-    /*
+    /**
      * Constructor
      * 
-     * @param arraylist of animals
-     * 
-     * @param arraylist of treatments, arrayList of Animal
+     * @param arraylist of treatments
+     * @param arrayList of Animal
      */
     public Schedule(ArrayList<Animal> animals, ArrayList<Treatments> treatments) {
         this.animalsArray = animals;
         addTreatments(treatments);
     }
 
-    /*
+    /**
      * Adds an array of treatments for each animal in the array
      * 
      * @param arraylist of treatments
@@ -50,7 +49,7 @@ public class Schedule {
         }
     }
 
-    /*
+    /**
      * Getter
      * 
      * @return The arraylist of animals in schedule class
@@ -59,7 +58,7 @@ public class Schedule {
         return animalsArray;
     }
 
-    /*
+    /**
      * Retrieves all treatments for all animals and sorts them in ascending order
      * based on multiple attributes.
      * 
@@ -74,7 +73,7 @@ public class Schedule {
         return sortTreatments(treats);
     }
 
-    /*
+    /**
      * Sorts an ArrayList of treatments by : duration in descending order, setup in
      * descending order,
      * startHour in ascending order, and maxWindow in ascending order.
@@ -97,16 +96,16 @@ public class Schedule {
         return treatments;
     }
 
-    /*
+    /**
      * This method takes a Treatment object as input and searches through an array
      * of Animal objects to find the first Animal that has the given Treatment in
      * its list of treatments.
      * 
      * @param treat A Treatments object to search for in the Animal objects'
-     * treatments lists.
+     *              treatments lists.
      * 
      * @return An Animal object that has the given Treatment in its treatments list
-     * or null if no such Animal is found.
+     *         or null if no such Animal is found.
      */
     private Animal getAnimalFromTreatment(Treatments treat) {
         for (Animal animal : getAnimalsArray()) {
@@ -117,13 +116,13 @@ public class Schedule {
         return null;
     }
 
-    /*
+    /**
      * Adds the given treatment to the backup schedule.
      * 
      * @param treatment The treatment to add to the backup schedule.
      * 
      * @throws ScheduleOverflowException if there is no available space in the
-     * backup schedule for the given treatment.
+     *                                   backup schedule for the given treatment.
      */
     private void addToBackupSchedule(Treatments treatment) throws ScheduleOverflowException {
         for (int hour = 0; hour < 24; hour++) {
@@ -148,14 +147,14 @@ public class Schedule {
                         treatment.getAnimalID(), treatment.getStartHour(), treatment.getDescription()));
     }
 
-    /*
+    /**
      * Adds the given treatment to the schedule. If there is not enough space in the
      * schedule, the treatment will be added to the backup schedule instead.
      * 
      * @param treatment The treatment to add to the schedule.
      * 
      * @throws ScheduleOverflowException if there is not enough space in the
-     * schedule to fit all treatments
+     *                                   schedule to fit all treatments
      */
     private void addToSchedule(Treatments treatment) throws ScheduleOverflowException {
         // Iterates through each hour and five minute block in the schedule to find an
@@ -182,7 +181,7 @@ public class Schedule {
         addToBackupSchedule(treatment);
     }
 
-    /*
+    /**
      * This method is responsible for scattering treatments with setup times
      * throughout the schedule
      * The method first retrieves the sorted list of treatments from the
@@ -202,7 +201,7 @@ public class Schedule {
      * available block in the schedule.
      * 
      * @param animalType - an AnimalType parameter representing the type of animal's
-     * treatments to schedule (either COYOTE or FOX)
+     *                   treatments to schedule (either COYOTE or FOX)
      */
     private void scatterSetupTimes(AnimalType animalType) {
         ArrayList<Treatments> treatments = getSortedTreatments();
@@ -254,7 +253,7 @@ public class Schedule {
         }
     }
 
-    /*
+    /**
      * This method handles the scheduling of treatments that have a setup time of 5
      * minutes or 10 minutes.
      * It sorts all treatments in the animal array and checks the number of coyote
@@ -354,7 +353,7 @@ public class Schedule {
         }
     }
 
-    /*
+    /**
      * Creates a schedule for the animal treatments based on the sorted list of
      * treatments.
      * Treatments are added to the schedule in order, with the exception of Kit
@@ -368,7 +367,7 @@ public class Schedule {
      * time of 0 are added to the schedule.
      * 
      * @throws ScheduleOverflowException if there is not enough space in the
-     * schedule to fit all treatments
+     *                                   schedule to fit all treatments
      */
     public void createSchedule() throws ScheduleOverflowException {
         ArrayList<Treatments> sortedTreats = getSortedTreatments();
@@ -395,14 +394,14 @@ public class Schedule {
 
     }
 
-    /*
+    /**
      * Returns an ArrayList of backup hours for the treatments in the backup
      * schedule.
      * A backup hour is an hour in which a treatment is scheduled in the backup
      * schedule.
      * 
      * @return ArrayList of Integer representing the hours in which a treatment is
-     * scheduled in the backup schedule
+     *         scheduled in the backup schedule
      */
     public ArrayList<Integer> getBackupHours() {
         ArrayList<Integer> backupHours = new ArrayList<Integer>();
@@ -414,7 +413,7 @@ public class Schedule {
         return backupHours;
     }
 
-    /*
+    /**
      * Getter
      * 
      * @return main schedule for the next day
@@ -423,7 +422,7 @@ public class Schedule {
         return schedule;
     }
 
-    /*
+    /**
      * Getter
      * 
      * @return backup schedule for the next day
@@ -431,7 +430,8 @@ public class Schedule {
     public Treatments[][] getBackupSchedule() {
         return backupSchedule;
     }
-    /*
+
+    /**
      * Generates the backup schedule for a given hour and appends it to the overall
      * schedule string. The backup schedule is
      * created by counting the occurrences of each treatment in the backup schedule
@@ -441,13 +441,14 @@ public class Schedule {
      * the names of all the animals being fed. If the backup schedule is not
      * required, this method does nothing.
      * 
-     * @param hour the hour for which the backup schedule is to be generated
+     * @param hour           the hour for which the backup schedule is to be
+     *                       generated
      * 
      * @param scheduleString the current overall schedule string to which the backup
-     * schedule will be appended
+     *                       schedule will be appended
      * 
      * @return the updated overall schedule string with the backup schedule
-     * appended, or the original string if no backup schedule was required
+     *         appended, or the original string if no backup schedule was required
      * 
      */
 
@@ -501,12 +502,12 @@ public class Schedule {
         return scheduleString;
     }
 
-    /*
+    /**
      * Returns a HashMap that contains a count of the number of times each treatment
      * appears in the schedule.
      * 
      * @return a HashMap that contains a count of the number of times each treatment
-     * appears in the schedule
+     *         appears in the schedule
      */
     private HashMap<Treatments, Integer> countDuplicateTreatments() {
         HashMap<Treatments, Integer> treatmentCount = new HashMap<Treatments, Integer>();
@@ -525,7 +526,7 @@ public class Schedule {
         return treatmentCount;
     }
 
-    /*
+    /**
      * This method generates a schedule string for the upcoming day based on the
      * treatments scheduled in the "schedule" array.
      * The schedule string includes the time of each treatment, the animal(s)
@@ -536,7 +537,7 @@ public class Schedule {
      * "writeScheduleTxt" method.
      * 
      * @param requiresBackup a boolean indicating whether a backup volunteer is
-     * required for the schedule
+     *                       required for the schedule
      * 
      * @throws IOException if there is an error writing the schedule to the file
      */
@@ -593,7 +594,8 @@ public class Schedule {
         writeScheduleTxt(scheduleString);
 
     }
-    /*
+
+    /**
      * Writes a given string to a text file.
      * 
      * @param scheduleString the string to be written to a file
@@ -613,7 +615,7 @@ public class Schedule {
         }
     }
 
-    /*
+    /**
      * This method is the main method for the EWR application. It connects to a
      * MySQL database
      * to retrieve information about animals and their treatments, creates a
@@ -621,15 +623,17 @@ public class Schedule {
      * Schedule class, and writes the schedule to a text file.
      * 
      * @param args An array of command-line arguments containing the user's MySQL
-     * username, password,and a boolean flag indicating whether this is the first
-     * schedule generation (true) or a subsequent generation (false).
+     *             username, password,and a boolean flag indicating whether this is
+     *             the first
+     *             schedule generation (true) or a subsequent generation (false).
      * 
      * @return An array of strings containing "true" if the schedule was
-     * successfully generated and written, or "false" followed by a space-separated
-     * list of backup hours if backup volunteers are needed.
+     *         successfully generated and written, or "false" followed by a
+     *         space-separated
+     *         list of backup hours if backup volunteers are needed.
      * 
      * @throws ScheduleOverflowException If there are too many treatments scheduled
-     * for a single day.
+     *                                   for a single day.
      * 
      */
     public static String[] main(String args[]) throws ScheduleOverflowException {
