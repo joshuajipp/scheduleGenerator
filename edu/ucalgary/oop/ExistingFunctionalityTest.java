@@ -3,24 +3,22 @@
 @author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
-@version    	1.3
+@version    	1.4
 @since  	1.0
 */
 package edu.ucalgary.oop;
 
 import org.junit.*;
 import org.junit.Test;
-
-import com.mysql.cj.util.TestUtils;
-
 import static org.junit.Assert.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
+
 
  public class ExistingFunctionalityTest {
     
@@ -360,6 +358,20 @@ import java.util.Collections;
         }
         schedule.createSchedule();
     }
+    @Test(expected = ScheduleOverflowException.class)
+    /*
+     * Test for ScheduleOverflowException when the number of treatments
+     * exceeds the available schedule slots
+     */
+    public void testCreateScheduleThrowsExceptionForBigStartHour() throws ScheduleOverflowException {
+        ArrayList<Treatments> manyTreatments = new ArrayList<>();
+        animalsArray.add(rightanimal);
+        Schedule schedule = new Schedule(animalsArray);
+        Treatments treatment =  new Treatments(1, 30, "Feeding", 5, 4, 0);
+        manyTreatments.add(treatment);
+        schedule.addTreatments(manyTreatments);
+        schedule.createSchedule();
+    }
 
     @Test
     /*
@@ -406,27 +418,31 @@ import java.util.Collections;
     }   
 
     @Test
-    // This test checks if the writeSchedule method generates an empty schedule string when there are no treatments
+    /*
+    * 
+    */
     public void testWriteScheduleNoTreatments() throws IOException, ScheduleOverflowException {
         // create an empty schedule file
-        Files.write(Paths.get("schedule.txt"), "".getBytes());
-        
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
         // Test that schedule string is empty when there are no treatments scheduled
         Schedule schedule = new Schedule(new ArrayList<>());
         schedule.createSchedule();
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get("schedule.txt")), StandardCharsets.UTF_8);
         assertEquals("", scheduleString);
-        
+
         // delete the schedule file
-        Files.deleteIfExists(Paths.get("schedule.txt"));
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
     }
 
     @Test
-    // This test checks if the writeSchedule method generates a schedule string with one treatment
-    public void testWriteSchedule_oneTreatment() throws IOException, ScheduleOverflowException {
+    /*
+     * 
+     */
+    public void testWriteScheduleOneTreatment() throws IOException, ScheduleOverflowException {
         // Test that schedule string includes one scheduled treatment
-        Files.write(Paths.get("schedule.txt"), "".getBytes());
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        String animalNameOne = rightanimal.getSpecies().toString().toLowerCase();
         animalsArray.add(rightanimal);
         Schedule schedule = new Schedule(animalsArray);
         schedule.createSchedule();
@@ -434,12 +450,79 @@ import java.util.Collections;
         treatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
         schedule.addTreatments(treatments);
         schedule.writeSchedule();
-        String scheduleString = TestUtils.readScheduleFile();
-        assertTrue(scheduleString.contains("Feeding"));
-        /*assertTrue(scheduleString.contains("5"));*/
-        /*assertTrue(scheduleString.contains(rightanimal.getNickname()));*/
-        Files.deleteIfExists(Paths.get("schedule.txt"));
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue(scheduleString.contains(rightanimal.getNickname()));
+        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalNameOne)));
+        assertTrue(scheduleString.contains("Clean porcupine Cage"));
+        assertFalse(scheduleString.contains("+ backup volunteer"));
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
     }
+
+    @Test
+    /*
+     * 
+     */
+    public void testWriteScheduleTwoSAnimals() throws IOException, ScheduleOverflowException {
+        // Test that schedule string includes more than one scheduled treatment
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        Animal animal2 = new Animal(2, "Woof", "Coyote");
+        String animalSpeciesOne = rightanimal.getSpecies().toString().toLowerCase();
+        String animalSpeciesTwo = animal2.getSpecies().toString().toLowerCase();
+        animalsArray.add(rightanimal);
+        animalsArray.add(animal2);
+        Schedule schedule = new Schedule(animalsArray);
+        schedule.createSchedule();
+        schedule.writeSchedule();
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue(scheduleString.contains(rightanimal.getNickname()));
+        assertTrue(scheduleString.contains(animal2.getNickname()));
+        assertFalse(scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
+        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
+        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
+        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
+        assertFalse(scheduleString.contains("+ backup volunteer"));
+
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
+    }
+    @Test
+    /*
+     * 
+     */
+    public void testWriteScheduleTwoSAnimalsManyTreatmentsAdded() throws IOException, ScheduleOverflowException {
+        // Test that schedule string includes more than one scheduled treatment
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        Animal animal2 = new Animal(2, "Woof", "Coyote");
+        String animalSpeciesOne = rightanimal.getSpecies().toString().toLowerCase();
+        String animalSpeciesTwo = animal2.getSpecies().toString().toLowerCase();
+        String animalNameOne = rightanimal.getNickname().toString();
+        animalsArray.add(rightanimal);
+        animalsArray.add(animal2);
+        Schedule schedule = new Schedule(animalsArray);
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        treatments.add(new Treatments(1, 6, "Feeding", 5, 3, 0));
+        treatments.add(new Treatments(2, 7, "Feeding", 20, 2, 10));
+        treatments.add(new Treatments(1, 21, "Play with Fluffy", 15, 2, 10));
+        treatments.add(new Treatments(2, 13, "Give Woof medicine", 5, 2));
+        schedule.addTreatments(treatments);
+        schedule.createSchedule();
+        schedule.writeSchedule();
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue(scheduleString.contains(rightanimal.getNickname()));
+        assertTrue(scheduleString.contains(animal2.getNickname()));
+        //Check for specific descriptions which will be displayed from the treatments, this works for specific spread out times as the schedule tries to optimize depending on startHour
+        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
+        assertTrue(scheduleString.contains(String.format("Feeding - %s", animalSpeciesTwo)));
+        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesOne)));
+        assertTrue(scheduleString.contains(String.format("Clean %s Cage", animalSpeciesTwo)));
+        assertTrue(scheduleString.contains(String.format("Play with %s", animalNameOne)));
+        assertFalse(scheduleString.contains("+ backup volunteer"));
+
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", tomorrow)));
+    }
+    
 }  
 
 
