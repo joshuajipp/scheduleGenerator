@@ -666,7 +666,6 @@ import java.util.ArrayList;
     * these are taken case of by countDuplicateTreatments
     */
     public void testWriteScheduleNoBackupVolunteerDuplicateTreatments() throws IOException, ScheduleOverflowException {
-        // add an animal to the schedule
         animalsArray.add(rightanimal);
         int i;
         // add treatments for the animal that exceed the maximum window
@@ -675,7 +674,6 @@ import java.util.ArrayList;
             treatments.add(new Treatments(1, i, "Feeding", 60, 8, 0));
         }
         schedule.addTreatments(treatments);
-        // generate and write the schedule
         schedule.createSchedule();
         schedule.writeSchedule();
         // read the schedule file and verify that it includes the backup volunteer
@@ -691,8 +689,34 @@ import java.util.ArrayList;
         // delete the schedule file
         Files.deleteIfExists(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1))));
     }
-}
-   
+
+    @Test
+    /*
+    * Tests that the schedule includes a backup volunteer when no more treatments can be added and no backup treatments are allowed
+    */
+    public void testWriteScheduleWithBackupVolunteer() throws IOException, ScheduleOverflowException {
+        animalsArray.add(rightanimal);
+        // add treatments for the animal that exceed the maximum window
+        ArrayList<Treatments> treatments = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            treatments.add(new Treatments(1, i, "Feeding", 60, 8, 0));
+        }
+        schedule.addTreatments(treatments);
+        schedule.createSchedule();
+        schedule.writeSchedule();
+        // read the schedule file and verify that it includes the backup volunteer
+        String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
+        System.out.println(scheduleString);
+        assertTrue("Schedule should include nickname of the animal", scheduleString.contains(rightanimal.getNickname()));
+        assertTrue("Schedule should include cleaning task for the animal's cage", scheduleString.contains(String.format("Clean %s Cage", rightanimal.getSpecies().toString().toLowerCase())));
+        assertTrue("Schedule should include feeding task for the animal", scheduleString.contains(String.format("Feeding - %s", rightanimal.getSpecies().toString().toLowerCase())));
+        assertTrue("Schedule should include a backup volunteer when no more treatments can be added and no backup treatments are allowed", scheduleString.contains("+ backup volunteer"));
+
+        // delete the schedule file
+        Files.deleteIfExists(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1))));
+    }
+    }
+    
 
 
     
