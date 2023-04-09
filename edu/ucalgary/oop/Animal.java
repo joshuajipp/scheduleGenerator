@@ -18,17 +18,17 @@ public class Animal {
 
     /**
      * Constructor
+     * If there is more than one name,
+     * species is set to AnimalType Kits.
+     * Otherwise, species is set if species appear in the AnimalType
+     * enum.
+     * Sets specific treatments for type of species including
+     * prep,feed and clean
+     * time.
      * 
-     * @param id
-     * @param name
-     * @param species
-     *                If there is more than one name,
-     *                species is set to AnimalType Kits.
-     *                Otherwise, species is set if species appear in the AnimalType
-     *                enum.
-     *                Sets specific treatments for type of species including
-     *                prep,feed and clean
-     *                time.
+     * @param id      id of animal
+     * @param name    name of animal
+     * @param species species string
      */
     public Animal(int id, String name, String species) {
         this.ID = id;
@@ -54,7 +54,7 @@ public class Animal {
      * add treatments in the animalTreatments arraylist if animalID matches with ID
      * on treatments database.
      * 
-     * @param arrayList of treatments
+     * @param treatments ArrayList of Treatments
      */
     public void addTreatments(ArrayList<Treatments> treatments) {
         for (Treatments treat : treatments) {
@@ -64,22 +64,38 @@ public class Animal {
         }
     }
 
-    /** Getter */
+    /**
+     * Getter
+     * 
+     * @return ID of animal
+     */
     public int getID() {
         return ID;
     }
 
-    /** Getter */
+    /**
+     * Getter
+     * 
+     * @return NICKNAME of animal
+     */
     public String getNickname() {
         return NICKNAME;
     }
 
-    /** Getter */
+    /**
+     * Getter
+     * 
+     * @return SPECIES of animal
+     */
     public AnimalType getSpecies() {
         return SPECIES;
     }
 
-    /** Getter */
+    /**
+     * Getter
+     * 
+     * @return animalTreatments
+     */
     public ArrayList<Treatments> getAnimalTreatments() {
         return animalTreatments;
     }
