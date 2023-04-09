@@ -3,7 +3,7 @@
 @author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
-@version    1.6
+@version    1.7
 @since  	1.0
 */
 package edu.ucalgary.oop;
@@ -506,7 +506,7 @@ import java.util.ArrayList;
         schedule.createSchedule();
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
+       
         assertTrue("Schedule string should contain the nickname of the first animal", scheduleString.contains(rightanimal.getNickname()));
         assertTrue("Schedule string should contain the nickname of the second animal", scheduleString.contains(animal2.getNickname()));
         assertFalse("Feeding treatment for the first animal should not be included in the schedule", scheduleString.contains(String.format("Feeding - %s", animalSpeciesOne)));
@@ -543,7 +543,7 @@ import java.util.ArrayList;
         schedule.createSchedule();
         schedule.writeSchedule();
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", tomorrow))), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
+       
         assertTrue("Schedule string should contain the first animal's name", scheduleString.contains(rightanimal.getNickname()));
         assertTrue("Schedule string should contain the second animal's name", scheduleString.contains(animal2.getNickname()));
         //Check for specific descriptions which will be displayed from the treatments, this works for specific spread out times as the schedule tries to optimize depending on startHour
@@ -648,7 +648,7 @@ import java.util.ArrayList;
 
         // read the schedule file and verify that it includes treatments for both animals
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
+       
         assertTrue("Schedule should include treatments for adult animal", scheduleString.contains(rightanimal.getNickname()));
         assertTrue("Schedule should include treatments for kit", scheduleString.contains(kit.getNickname()));
         assertTrue("Schedule should include cleaning treatment for kit's cage", scheduleString.contains(String.format("Clean kits Cage (%s)", kit.getNickname())));
@@ -678,7 +678,7 @@ import java.util.ArrayList;
         schedule.writeSchedule();
         // read the schedule file and verify that it includes the backup volunteer
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
+       
         assertTrue("Schedule should contain the animal's nickname", scheduleString.contains(rightanimal.getNickname()));
         assertTrue("Schedule should contain a treatment for cleaning the animal's cage", scheduleString.contains(String.format("Clean %s Cage (%s)", 
             rightanimal.getSpecies().toString().toLowerCase(), rightanimal.getNickname())));
@@ -706,7 +706,7 @@ import java.util.ArrayList;
         schedule.writeSchedule();
         // read the schedule file and verify that it includes the backup volunteer
         String scheduleString = new String(Files.readAllBytes(Paths.get(String.format("%s.txt", LocalDate.now().plusDays(1)))), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
+       
         assertTrue("Schedule should include nickname of the animal", scheduleString.contains(rightanimal.getNickname()));
         assertTrue("Schedule should include cleaning task for the animal's cage", scheduleString.contains(String.format("Clean %s Cage", rightanimal.getSpecies().toString().toLowerCase())));
         assertTrue("Schedule should include feeding task for the animal", scheduleString.contains(String.format("Feeding - %s", rightanimal.getSpecies().toString().toLowerCase())));
