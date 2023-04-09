@@ -1,4 +1,6 @@
 /**
+@author 	Mizy Bermas <a href="mailto:mizy.bermas@ucalgary.ca">mizy.bermas@ucalgary.ca</a>
+@author 	Joshua Jipp <a href="mailto:joshua.jipp@ucalgary.ca">joshua.jipp@ucalgary.ca</a>
 @author 	Joshua Koshy <a href="mailto:joshua.koshy@ucalgary.ca">joshua.koshy@ucalgary.ca</a>
 @author 	Nicole Lazarte <a href="mailto:nicole.lazarte@ucalgary.ca">nicole.lazarte@ucalgary.ca</a>
 @version    	1.3
@@ -8,6 +10,9 @@ package edu.ucalgary.oop;
 
 import org.junit.*;
 import org.junit.Test;
+
+import com.mysql.cj.util.TestUtils;
+
 import static org.junit.Assert.*;
 
 import java.io.*;
@@ -429,9 +434,8 @@ import java.util.Collections;
         treatments.add(new Treatments(1, 19, "Feeding", 5, 3, 0));
         schedule.addTreatments(treatments);
         schedule.writeSchedule();
-        String scheduleString = new String(Files.readAllBytes(Paths.get("schedule.txt")), StandardCharsets.UTF_8);
-        System.out.println(scheduleString);
-        /*assertTrue(scheduleString.contains("Feeding"));*/
+        String scheduleString = TestUtils.readScheduleFile();
+        assertTrue(scheduleString.contains("Feeding"));
         /*assertTrue(scheduleString.contains("5"));*/
         /*assertTrue(scheduleString.contains(rightanimal.getNickname()));*/
         Files.deleteIfExists(Paths.get("schedule.txt"));
