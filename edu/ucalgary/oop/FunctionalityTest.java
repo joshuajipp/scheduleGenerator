@@ -86,7 +86,7 @@ import java.util.ArrayList;
         // Create an animal with two names and check that the expected species is KITS
         Animal animal = new Animal(5, "Sherlock Holmes", "Raccoon");
         AnimalType expectedanimal = AnimalType.KITS;
-        assertEquals(expectedanimal, animal.getSpecies());
+        assertEquals("When an animal has two words in its name or two names it should be changed to the animaltype KIT species", expectedanimal, animal.getSpecies());
         
         // Check that the animal's treatments match the expected treatments
         ArrayList<Treatments> testtreatments = animal.getAnimalTreatments();
@@ -111,7 +111,9 @@ import java.util.ArrayList;
 
     // Test constructor with invalid species
     @Test(expected = IllegalArgumentException.class)
-    // Test to ensure an IllegalArgumentException is thrown for an invalid species input in the constructor
+    /*
+     * Test to ensure an IllegalArgumentException is thrown for an invalid species input in the constructor
+     */
     public void testAnimalConstructorInvalidSpecies() {
         new Animal(1, "Fluffy", "Invalid Species");
     }
@@ -167,7 +169,6 @@ import java.util.ArrayList;
     @Test
     /*
      * Testing addTreatments with animal ID that does not match
-     * 
     */
     public void testAddTreatmentsWithInvalidAnimalID() {
         ArrayList<Treatments> treatments = new ArrayList<Treatments>();
