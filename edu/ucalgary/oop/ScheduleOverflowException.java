@@ -15,8 +15,8 @@ package edu.ucalgary.oop;
  */
 public class ScheduleOverflowException extends Exception {
     /**
-     * @param custom message from schedule class
-     * @returns exception message
+     * @param message exception message
+     * 
      */
     public ScheduleOverflowException(String message) {
         super(message);

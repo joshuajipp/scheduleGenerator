@@ -21,7 +21,7 @@ public class Schedule {
     /**
      * Constructor
      * 
-     * @param arraylist of animals.
+     * @param animals arraylist of animals
      */
     public Schedule(ArrayList<Animal> animals) {
         this.animalsArray = animals;
@@ -30,8 +30,8 @@ public class Schedule {
     /**
      * Constructor
      * 
-     * @param arraylist of treatments
-     * @param arrayList of Animal
+     * @param treatments arraylist of treatments
+     * @param animals    arraylist of animals
      */
     public Schedule(ArrayList<Animal> animals, ArrayList<Treatments> treatments) {
         this.animalsArray = animals;
@@ -41,7 +41,7 @@ public class Schedule {
     /**
      * Adds an array of treatments for each animal in the array
      * 
-     * @param arraylist of treatments
+     * @param treatments arraylist of treatments
      */
     public void addTreatments(ArrayList<Treatments> treatments) {
         for (Animal animal : getAnimalsArray()) {
@@ -536,10 +536,6 @@ public class Schedule {
      * will be present. The schedule string is then written to a file using the
      * "writeScheduleTxt" method.
      * 
-     * @param requiresBackup a boolean indicating whether a backup volunteer is
-     *                       required for the schedule
-     * 
-     * @throws IOException if there is an error writing the schedule to the file
      */
     public void writeSchedule() {
         HashMap<Treatments, Integer> treatmentCount = countDuplicateTreatments();

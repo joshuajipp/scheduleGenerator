@@ -164,7 +164,7 @@ public class WildlifeRescueGUI extends JFrame implements ActionListener, MouseLi
      * Involves the creation of the Frame and sets the visibility to true so that
      * the user can see it.
      * 
-     * @param string array of args
+     * @param args Unused
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {

@@ -62,11 +62,11 @@ public class HomePageGUI extends JFrame {
      * Sets up the frame with a title and the size. It also sets a default behaviour
      * when closed.
      * 
-     * @param arraylist of scheduleList. Contains schele read from the text file
+     * @param scheduleList Passed from WildlifeRescue, which is the login page.
      * 
-     * @param username. Passed from WildlifeRescue, which is the login page.
+     * @param username     Passed from WildlifeRescue, which is the login page.
      * 
-     * @param password. Passed from WildlifeRescue, which is the login page.
+     * @param password     Passed from WildlifeRescue, which is the login page.
      */
     public HomePageGUI(ArrayList<String> scheduleList, String username, String password) {
         super("Wildlife Rescue"); // call to JFrame constructor with title arguement
@@ -158,7 +158,7 @@ public class HomePageGUI extends JFrame {
     /**
      * Creates a table and fills each row with data from animal query
      * 
-     * @returns created animal table shown in the animal tab
+     * @return
      */
     public JTable animalTable() {
         DefaultTableModel tableModel = new DefaultTableModel();
@@ -189,7 +189,7 @@ public class HomePageGUI extends JFrame {
     /**
      * Creates a table and fills each row with data from task query
      * 
-     * @returns created task table shown in the task tab
+     * @return JTable created task table shown in the task tab
      */
     public JTable taskTable() {
         DefaultTableModel tableModel = new DefaultTableModel();
@@ -222,7 +222,7 @@ public class HomePageGUI extends JFrame {
     /**
      * Creates a table and fills each row with data from treament query
      * 
-     * @returns created treatment table shown in the treatment tab
+     * @return JTable created treatment table shown in the treatment tab
      */
     public JTable treatmentTable() {
         JTable table = new JTable(tableModel);
@@ -312,7 +312,7 @@ public class HomePageGUI extends JFrame {
      * Depending on the return array of the Schedule class, it involkes Frame
      * accordingly.
      * 
-     * @param Array of string arguments. Passed by WildlifeRescue
+     * @param args username and password
      * 
      */
     public static void main(String[] args) {
