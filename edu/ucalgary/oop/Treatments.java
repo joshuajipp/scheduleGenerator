@@ -8,6 +8,10 @@
 */
 package edu.ucalgary.oop;
 
+/**
+ * Treatments class to store information about each treatment
+ * 
+ */
 public class Treatments {
     private int animalID;
     private int startHour;

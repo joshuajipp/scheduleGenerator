@@ -13,6 +13,11 @@ import java.util.*;
 import java.time.*;
 import java.io.*;
 
+/**
+ * This class is responsible for creating a schedule for the animals in the
+ * database. It will create a schedule for the animals based on the treatments
+ * they have and the time they are available.
+ */
 public class Schedule {
     private ArrayList<Animal> animalsArray;
     private Treatments[][] schedule = new Treatments[24][12];

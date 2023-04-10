@@ -8,6 +8,10 @@
 */
 package edu.ucalgary.oop;
 
+/**
+ * AnimalType enum to store information about each animal type
+ * 
+ */
 public enum AnimalType {
     /**
      * Recognized types of species this program supports

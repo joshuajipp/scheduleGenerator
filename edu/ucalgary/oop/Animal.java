@@ -10,6 +10,10 @@ package edu.ucalgary.oop;
 
 import java.util.ArrayList;
 
+/**
+ * Animal class to store information about each animal
+ * 
+ */
 public class Animal {
     private final int ID;
     private final String NICKNAME;
